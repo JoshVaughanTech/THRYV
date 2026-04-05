@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { Bell, User } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { SettingsForm } from './settings-form';
+import { NotificationToggles } from './notification-toggles';
 
 export default async function CreatorSettingsPage() {
   const supabase = await createClient();
@@ -30,54 +32,35 @@ export default async function CreatorSettingsPage() {
     .slice(0, 2);
 
   const joinedDate = profile?.created_at
-    ? new Date(profile.created_at).toLocaleDateString('en-US', {
-        month: 'long',
-        year: 'numeric',
-      })
+    ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
     : 'Unknown';
 
   return (
     <div>
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-[#a0a0b8] mt-1">
-          Manage your creator profile and preferences.
-        </p>
+        <p className="text-[#a0a0b8] mt-1">Manage your creator profile and preferences.</p>
       </div>
 
       {/* Creator Profile Card */}
       <div className="max-w-[640px] rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6 mb-6">
-        {/* Avatar + Identity */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-16 w-16 rounded-full border-2 border-[#6c5ce7] bg-[#1A2A0A] flex items-center justify-center">
             <span className="text-lg font-bold text-[#6c5ce7]">{initials}</span>
           </div>
           <div>
             <p className="text-lg font-bold text-white">{fullName}</p>
-            <p className="text-sm text-[#a0a0b8]">
-              PRO Creator &middot; Joined {joinedDate}
-            </p>
+            <p className="text-sm text-[#a0a0b8]">PRO Creator &middot; Joined {joinedDate}</p>
           </div>
         </div>
 
-        {/* Profile Fields */}
-        <div className="space-y-5">
-          <ProfileField label="Display Name" value={fullName} />
-          <ProfileField
-            label="Bio"
-            value={creator.bio || 'No bio set'}
-            multiline
-          />
-          <ProfileField
-            label="Specialties"
-            value={creator.credentials || 'No specialties set'}
-          />
-          <ProfileField
-            label="Video URL"
-            value={creator.video_url || 'No video URL set'}
-          />
-        </div>
+        <SettingsForm
+          userId={user.id}
+          initialName={fullName}
+          initialBio={creator.bio || ''}
+          initialCredentials={creator.credentials || ''}
+          initialVideoUrl={creator.video_url || ''}
+        />
       </div>
 
       {/* Notifications Card */}
@@ -86,65 +69,7 @@ export default async function CreatorSettingsPage() {
           <Bell className="h-5 w-5 text-[#a0a0b8]" />
           <h2 className="text-lg font-bold text-white">Notifications</h2>
         </div>
-
-        <div className="space-y-0">
-          <ToggleRow label="New program activation" enabled />
-          <ToggleRow label="Community comments" enabled />
-          <ToggleRow label="Payout completed" enabled />
-          <ToggleRow label="Weekly summary email" enabled={false} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProfileField({
-  label,
-  value,
-  multiline,
-}: {
-  label: string;
-  value: string;
-  multiline?: boolean;
-}) {
-  return (
-    <div>
-      <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium mb-1.5">
-        {label}
-      </p>
-      {multiline ? (
-        <div className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-[#CCCCCC] min-h-[80px] whitespace-pre-wrap">
-          {value}
-        </div>
-      ) : (
-        <div className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-[#CCCCCC]">
-          {value}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ToggleRow({
-  label,
-  enabled,
-}: {
-  label: string;
-  enabled: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between py-4 border-b border-[#2a2a3a] last:border-b-0">
-      <span className="text-sm text-white">{label}</span>
-      <div
-        className={`relative w-11 h-6 rounded-full transition-colors ${
-          enabled ? 'bg-[#6c5ce7]' : 'bg-[#2a2a3a]'
-        }`}
-      >
-        <div
-          className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${
-            enabled ? 'left-6' : 'left-1'
-          }`}
-        />
+        <NotificationToggles />
       </div>
     </div>
   );

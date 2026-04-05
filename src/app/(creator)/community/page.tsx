@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { Plus, Heart, MessageCircle, Users } from 'lucide-react';
+import { Heart, MessageCircle, Users } from 'lucide-react';
+import { NewPostForm } from './new-post-form';
 
 export default async function CreatorCommunityPage() {
   const supabase = await createClient();
@@ -132,10 +133,7 @@ export default async function CreatorCommunityPage() {
             Manage and engage with your program communities.
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors">
-          <Plus className="h-4 w-4" />
-          New post
-        </button>
+        <NewPostForm programs={programs || []} />
       </div>
 
       {/* Filter Pills */}

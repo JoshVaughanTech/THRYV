@@ -3,13 +3,13 @@ import { createClient } from '@/lib/supabase/server';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
-  Download,
   Lock,
   DollarSign,
   Zap,
   Clock,
   Users,
 } from 'lucide-react';
+import { ExportButton } from './export-button';
 
 export default async function CreatorEarningsPage() {
   const supabase = await createClient();
@@ -163,10 +163,7 @@ export default async function CreatorEarningsPage() {
             Track your revenue, payouts, and program performance.
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-xl border border-[#2a2a3a] bg-[#15151f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1f1f2e] transition-colors">
-          <Download className="h-4 w-4 text-[#a0a0b8]" />
-          Export CSV
-        </button>
+        <ExportButton payoutHistory={payoutHistory} />
       </div>
 
       {/* Current Month Card */}
