@@ -4,9 +4,9 @@ import { CompletionsLineChart } from '@/components/charts/completions-line-chart
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const PAYOUT_WEIGHTS = [
-  { name: 'Completions', value: 50, color: '#B4F000' },
-  { name: 'Time spent', value: 30, color: '#7ED957' },
-  { name: 'Engagement', value: 20, color: '#F0A000' },
+  { name: 'Completions', value: 50, color: '#6c5ce7' },
+  { name: 'Time spent', value: 30, color: '#00d2ff' },
+  { name: 'Engagement', value: 20, color: '#ffab00' },
 ];
 
 interface CreatorChartsProps {
@@ -61,7 +61,7 @@ export function CreatorCharts({ data7d, data30d, data90d, donut, totalEarnings =
                   className="w-3 h-3 rounded-sm flex-shrink-0"
                   style={{ backgroundColor: item.color }}
                 />
-                <span className="text-sm text-[#888888]">{item.name}</span>
+                <span className="text-sm text-[#a0a0b8]">{item.name}</span>
               </div>
               <span className="text-sm font-bold text-white">{item.value}%</span>
             </div>

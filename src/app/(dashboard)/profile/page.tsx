@@ -88,7 +88,7 @@ export default async function ProfilePage() {
       {/* ── Avatar Section ── */}
       <section className="flex flex-col items-center pt-6 pb-8">
         <div className="relative mb-3">
-          <div className="w-[72px] h-[72px] rounded-full border-2 border-[#B4F000] bg-gradient-to-br from-[#B4F000]/30 to-[#7ED957]/20 flex items-center justify-center text-2xl font-bold text-white">
+          <div className="w-[72px] h-[72px] rounded-full border-2 border-[#6c5ce7] bg-gradient-to-br from-[#6c5ce7]/30 to-[#00d2ff]/20 flex items-center justify-center text-2xl font-bold text-white">
             {initials}
           </div>
         </div>
@@ -99,11 +99,11 @@ export default async function ProfilePage() {
 
         {/* Badges row */}
         <div className="flex items-center gap-2 mt-3">
-          <span className="inline-flex items-center rounded-full bg-[#B4F000]/10 border border-[#B4F000]/20 px-3 py-1 text-xs font-semibold text-[#B4F000] tracking-wide">
+          <span className="inline-flex items-center rounded-full bg-[#6c5ce7]/10 border border-[#6c5ce7]/20 px-3 py-1 text-xs font-semibold text-[#6c5ce7] tracking-wide">
             LEVEL {momentumLevel}
           </span>
           {(streak?.current_streak ?? 0) > 0 && (
-            <span className="inline-flex items-center rounded-full bg-[#F0A000]/10 border border-[#F0A000]/20 px-3 py-1 text-xs font-semibold text-[#F0A000] tracking-wide">
+            <span className="inline-flex items-center rounded-full bg-[#ffab00]/10 border border-[#ffab00]/20 px-3 py-1 text-xs font-semibold text-[#ffab00] tracking-wide">
               {streak?.current_streak} DAY STREAK
             </span>
           )}
@@ -112,17 +112,17 @@ export default async function ProfilePage() {
 
       {/* ── Subscription Card ── */}
       <section className="mb-6">
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] overflow-hidden">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] overflow-hidden">
           {/* Card header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[#1E1E1E]">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a3a]">
             <h2 className="text-base font-semibold text-white">Subscription</h2>
-            <span className="inline-flex items-center rounded-full bg-[#B4F000]/10 border border-[#B4F000]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#B4F000] uppercase tracking-wider">
+            <span className="inline-flex items-center rounded-full bg-[#6c5ce7]/10 border border-[#6c5ce7]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#6c5ce7] uppercase tracking-wider">
               {subscription?.status || 'None'}
             </span>
           </div>
 
           {/* Rows */}
-          <div className="divide-y divide-[#1E1E1E]">
+          <div className="divide-y divide-[#2a2a3a]">
             <div className="flex items-center justify-between px-5 py-3.5">
               <span className="text-sm text-[#666]">Plan</span>
               <span className="text-sm font-medium text-white">
@@ -135,7 +135,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex items-center justify-between px-5 py-3.5">
               <span className="text-sm text-[#666]">Credits remaining</span>
-              <span className="text-sm font-semibold text-[#B4F000]">
+              <span className="text-sm font-semibold text-[#6c5ce7]">
                 {creditBalance ?? 0}
               </span>
             </div>
@@ -170,9 +170,9 @@ export default async function ProfilePage() {
                   key={activation.id}
                   href={`/programs/${activation.program_id}`}
                 >
-                  <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-4 hover:border-[#2A2A2A] transition-colors">
+                  <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-4 hover:border-[#2a2a3a] transition-colors">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B4F000]/30 to-[#7ED957]/20 flex items-center justify-center text-xs font-bold text-[#B4F000] flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6c5ce7]/30 to-[#00d2ff]/20 flex items-center justify-center text-xs font-bold text-[#6c5ce7] flex-shrink-0">
                         {programInitials}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -184,13 +184,13 @@ export default async function ProfilePage() {
                           {creatorName}
                         </p>
                       </div>
-                      <span className="text-sm font-semibold text-[#B4F000] flex-shrink-0">
+                      <span className="text-sm font-semibold text-[#6c5ce7] flex-shrink-0">
                         {progressPct}%
                       </span>
                     </div>
-                    <div className="h-1.5 rounded-full bg-[#1E1E1E] overflow-hidden">
+                    <div className="h-1.5 rounded-full bg-[#2a2a3a] overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-[#B4F000] transition-all"
+                        className="h-full rounded-full bg-[#6c5ce7] transition-all"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
@@ -200,11 +200,11 @@ export default async function ProfilePage() {
             })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6 text-center">
+          <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6 text-center">
             <p className="text-sm text-[#666] mb-2">No active programs</p>
             <Link
               href="/programs"
-              className="text-sm text-[#B4F000] hover:underline"
+              className="text-sm text-[#6c5ce7] hover:underline"
             >
               Browse Programs
             </Link>
@@ -218,9 +218,9 @@ export default async function ProfilePage() {
           Credit Ledger
         </h3>
 
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] overflow-hidden">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] overflow-hidden">
           {creditHistory && creditHistory.length > 0 ? (
-            <div className="divide-y divide-[#1E1E1E]">
+            <div className="divide-y divide-[#2a2a3a]">
               {creditHistory.map((entry: any) => {
                 const isPositive = entry.amount >= 0;
                 const dateStr = new Date(entry.created_at).toLocaleDateString(
@@ -240,7 +240,7 @@ export default async function ProfilePage() {
                     </div>
                     <span
                       className={`text-sm font-semibold flex-shrink-0 ${
-                        isPositive ? 'text-[#B4F000]' : 'text-[#E24B4A]'
+                        isPositive ? 'text-[#6c5ce7]' : 'text-[#ff5252]'
                       }`}
                     >
                       {isPositive ? '+' : ''}
@@ -260,9 +260,9 @@ export default async function ProfilePage() {
 
       {/* ── Settings + Logout ── */}
       <section>
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] overflow-hidden">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] overflow-hidden">
           <Link href="/settings">
-            <div className="flex items-center justify-between px-5 py-4 hover:bg-[#1A1A1A] transition-colors">
+            <div className="flex items-center justify-between px-5 py-4 hover:bg-[#1f1f2e] transition-colors">
               <div className="flex items-center gap-3">
                 <Settings className="h-5 w-5 text-[#666]" />
                 <span className="text-sm font-medium text-white">Settings</span>
@@ -270,14 +270,14 @@ export default async function ProfilePage() {
               <ChevronRight className="h-4 w-4 text-[#666]" />
             </div>
           </Link>
-          <div className="border-t border-[#1E1E1E]" />
+          <div className="border-t border-[#2a2a3a]" />
           <form action="/api/auth/logout" method="POST">
             <button
               type="submit"
-              className="flex items-center gap-3 px-5 py-4 w-full text-left hover:bg-[#1A1A1A] transition-colors"
+              className="flex items-center gap-3 px-5 py-4 w-full text-left hover:bg-[#1f1f2e] transition-colors"
             >
-              <LogOut className="h-5 w-5 text-[#E24B4A]" />
-              <span className="text-sm font-medium text-[#E24B4A]">
+              <LogOut className="h-5 w-5 text-[#ff5252]" />
+              <span className="text-sm font-medium text-[#ff5252]">
                 Log out
               </span>
             </button>

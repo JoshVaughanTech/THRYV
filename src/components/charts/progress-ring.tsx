@@ -16,7 +16,7 @@ interface ProgressRingProps {
 export function ProgressRing({
   percentage,
   color,
-  trackColor = '#1E1E1E',
+  trackColor = '#2a2a3a',
   size = 120,
   strokeWidth = 8,
   label,
@@ -74,11 +74,11 @@ interface DualProgressRingProps {
 
 export function DualProgressRing({
   outerPercentage,
-  outerColor = '#B4F000',
+  outerColor = '#6c5ce7',
   outerLabel,
   outerValue,
   innerPercentage,
-  innerColor = '#7ED957',
+  innerColor = '#00d2ff',
   innerLabel,
   innerValue,
   size = 160,
@@ -97,7 +97,7 @@ export function DualProgressRing({
     <div className="flex flex-col items-center">
       <svg width={size} height={size} className="-rotate-90">
         {/* Outer track */}
-        <circle cx={size / 2} cy={size / 2} r={outerRadius} fill="none" stroke="#1E1E1E" strokeWidth={outerStroke} />
+        <circle cx={size / 2} cy={size / 2} r={outerRadius} fill="none" stroke="#2a2a3a" strokeWidth={outerStroke} />
         {/* Outer progress */}
         <circle
           cx={size / 2} cy={size / 2} r={outerRadius} fill="none"
@@ -106,7 +106,7 @@ export function DualProgressRing({
           className="transition-all duration-700 ease-out"
         />
         {/* Inner track */}
-        <circle cx={size / 2} cy={size / 2} r={innerRadius} fill="none" stroke="#1E1E1E" strokeWidth={innerStroke} />
+        <circle cx={size / 2} cy={size / 2} r={innerRadius} fill="none" stroke="#2a2a3a" strokeWidth={innerStroke} />
         {/* Inner progress */}
         <circle
           cx={size / 2} cy={size / 2} r={innerRadius} fill="none"

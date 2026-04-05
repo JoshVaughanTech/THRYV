@@ -8,7 +8,7 @@ export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={clsx(
-        'animate-pulse rounded-lg bg-[#1E1E1E]',
+        'animate-pulse rounded-lg bg-[#2a2a3a]',
         className
       )}
     />
@@ -17,7 +17,7 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6 space-y-3">
+    <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6 space-y-3">
       <Skeleton className="h-4 w-1/3" />
       <Skeleton className="h-8 w-1/2" />
       <Skeleton className="h-3 w-2/3" />
@@ -27,7 +27,7 @@ export function CardSkeleton() {
 
 export function ProgramCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+    <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
       <Skeleton className="h-40 w-full rounded-lg mb-4" />
       <div className="flex gap-2 mb-3">
         <Skeleton className="h-5 w-16 rounded-full" />

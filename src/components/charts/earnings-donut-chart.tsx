@@ -3,8 +3,8 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const PAYOUT_WEIGHTS = [
-  { name: 'Completions', value: 50, color: '#B4F000' },
-  { name: 'Time Spent', value: 30, color: '#7ED957' },
+  { name: 'Completions', value: 50, color: '#6c5ce7' },
+  { name: 'Time Spent', value: 30, color: '#00d2ff' },
   { name: 'Engagement', value: 20, color: '#7799DD' },
 ];
 

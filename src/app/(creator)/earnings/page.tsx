@@ -159,21 +159,21 @@ export default async function CreatorEarningsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Earnings</h1>
-          <p className="text-[#888888] mt-1">
+          <p className="text-[#a0a0b8] mt-1">
             Track your revenue, payouts, and program performance.
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-xl border border-[#1E1E1E] bg-[#141414] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1A1A1A] transition-colors">
-          <Download className="h-4 w-4 text-[#888888]" />
+        <button className="flex items-center gap-2 rounded-xl border border-[#2a2a3a] bg-[#15151f] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1f1f2e] transition-colors">
+          <Download className="h-4 w-4 text-[#a0a0b8]" />
           Export CSV
         </button>
       </div>
 
       {/* Current Month Card */}
-      <Card className="border-[#B4F000]/30 bg-[#B4F000]/5 mb-8">
+      <Card className="border-[#6c5ce7]/30 bg-[#6c5ce7]/5 mb-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <p className="text-[10px] text-[#888888] uppercase tracking-[1px] font-medium">
+            <p className="text-[10px] text-[#a0a0b8] uppercase tracking-[1px] font-medium">
               {currentMonthLabel} &mdash; CURRENT PERIOD
             </p>
           </div>
@@ -182,7 +182,7 @@ export default async function CreatorEarningsPage() {
           </Badge>
         </div>
 
-        <p className="text-5xl font-bold text-[#B4F000] mb-8">
+        <p className="text-5xl font-bold text-[#6c5ce7] mb-8">
           ${currentMonthEarnings.toLocaleString(undefined, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
@@ -195,19 +195,19 @@ export default async function CreatorEarningsPage() {
             label="Workout completions"
             value={completionCount.toLocaleString()}
             weight="50% weight"
-            dotColor="bg-[#B4F000]"
+            dotColor="bg-[#6c5ce7]"
           />
           <BreakdownCard
             label="Time spent"
             value={`${totalTimeMinutes.toLocaleString()} min`}
             weight="30% weight"
-            dotColor="bg-[#7ED957]"
+            dotColor="bg-[#00d2ff]"
           />
           <BreakdownCard
             label="Engagement score"
             value={engagementCount.toLocaleString()}
             weight="20% weight"
-            dotColor="bg-[#F0A000]"
+            dotColor="bg-[#ffab00]"
           />
         </div>
       </Card>
@@ -219,20 +219,20 @@ export default async function CreatorEarningsPage() {
           {programRevenueData.map((program: any) => (
             <Card key={program.id}>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[#1A1A1A] flex items-center justify-center">
-                  <Zap className="h-4 w-4 text-[#B4F000]" />
+                <div className="w-10 h-10 rounded-xl bg-[#1f1f2e] flex items-center justify-center">
+                  <Zap className="h-4 w-4 text-[#6c5ce7]" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{program.title}</p>
-                  <p className="text-[11px] text-[#555555]">{program.discipline || 'General'}</p>
+                  <p className="text-[11px] text-[#6b6b80]">{program.discipline || 'General'}</p>
                 </div>
               </div>
 
-              <p className="text-2xl font-bold text-[#B4F000] mb-3">
+              <p className="text-2xl font-bold text-[#6c5ce7] mb-3">
                 ${program.revenue.toLocaleString()}
               </p>
 
-              <div className="flex items-center gap-4 text-xs text-[#888888] mb-3">
+              <div className="flex items-center gap-4 text-xs text-[#a0a0b8] mb-3">
                 <span className="flex items-center gap-1">
                   <Users className="h-3 w-3" />
                   {program.activeUsers} active
@@ -244,15 +244,15 @@ export default async function CreatorEarningsPage() {
               </div>
 
               {/* Progress bar showing share of total */}
-              <div className="h-1.5 rounded-full bg-[#1E1E1E]">
+              <div className="h-1.5 rounded-full bg-[#2a2a3a]">
                 <div
-                  className="h-full rounded-full bg-[#B4F000] transition-all"
+                  className="h-full rounded-full bg-[#6c5ce7] transition-all"
                   style={{
                     width: `${totalProgramRevenue > 0 ? Math.round((program.revenue / totalProgramRevenue) * 100) : 0}%`,
                   }}
                 />
               </div>
-              <p className="text-[10px] text-[#555555] mt-1">
+              <p className="text-[10px] text-[#6b6b80] mt-1">
                 {totalProgramRevenue > 0
                   ? `${Math.round((program.revenue / totalProgramRevenue) * 100)}% of total`
                   : '0% of total'}
@@ -262,7 +262,7 @@ export default async function CreatorEarningsPage() {
 
           {(!programRevenueData || programRevenueData.length === 0) && (
             <Card className="col-span-3 flex items-center justify-center py-12">
-              <p className="text-[#555555] text-sm">No programs yet.</p>
+              <p className="text-[#6b6b80] text-sm">No programs yet.</p>
             </Card>
           )}
         </div>
@@ -275,7 +275,7 @@ export default async function CreatorEarningsPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="text-[10px] text-[#555555] uppercase tracking-[1px]">
+              <tr className="text-[10px] text-[#6b6b80] uppercase tracking-[1px]">
                 <th className="text-left pb-4 font-medium">Month</th>
                 <th className="text-center pb-4 font-medium">Completions</th>
                 <th className="text-center pb-4 font-medium">Time (min)</th>
@@ -286,20 +286,20 @@ export default async function CreatorEarningsPage() {
             </thead>
             <tbody>
               {payoutHistory.map((row: any) => (
-                <tr key={row.id} className="border-t border-[#1E1E1E]">
+                <tr key={row.id} className="border-t border-[#2a2a3a]">
                   <td className="py-4 text-sm font-medium text-white">
                     {formatMonth(row.month)}
                   </td>
-                  <td className="py-4 text-center text-sm text-[#888888]">
+                  <td className="py-4 text-center text-sm text-[#a0a0b8]">
                     {row.completions.toLocaleString()}
                   </td>
-                  <td className="py-4 text-center text-sm text-[#888888]">
+                  <td className="py-4 text-center text-sm text-[#a0a0b8]">
                     {row.timeMinutes.toLocaleString()}
                   </td>
-                  <td className="py-4 text-center text-sm text-[#888888]">
+                  <td className="py-4 text-center text-sm text-[#a0a0b8]">
                     {row.engagement.toLocaleString()}
                   </td>
-                  <td className="py-4 text-right text-sm font-medium text-[#B4F000]">
+                  <td className="py-4 text-right text-sm font-medium text-[#6c5ce7]">
                     ${row.total.toLocaleString(undefined, {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
@@ -307,12 +307,12 @@ export default async function CreatorEarningsPage() {
                   </td>
                   <td className="py-4 text-right">
                     {row.status === 'locked' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1A2A0A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#B4F000]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1A2A0A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#6c5ce7]">
                         <Lock className="h-3 w-3" />
                         Locked
                       </span>
                     ) : (
-                      <span className="inline-flex items-center rounded-full bg-[#1A1A1A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#555555]">
+                      <span className="inline-flex items-center rounded-full bg-[#1f1f2e] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#6b6b80]">
                         {row.status}
                       </span>
                     )}
@@ -322,7 +322,7 @@ export default async function CreatorEarningsPage() {
 
               {payoutHistory.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-sm text-[#555555]">
+                  <td colSpan={6} className="py-12 text-center text-sm text-[#6b6b80]">
                     No payout history yet.
                   </td>
                 </tr>
@@ -347,15 +347,15 @@ function BreakdownCard({
   dotColor: string;
 }) {
   return (
-    <div className="rounded-xl border border-[#1E1E1E] bg-[#141414] p-4">
+    <div className="rounded-xl border border-[#2a2a3a] bg-[#15151f] p-4">
       <div className="flex items-center gap-2 mb-2">
         <div className={`w-2 h-2 rounded-full ${dotColor}`} />
-        <p className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium">
+        <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">
           {weight}
         </p>
       </div>
       <p className="text-xl font-bold text-white mb-1">{value}</p>
-      <p className="text-xs text-[#888888]">{label}</p>
+      <p className="text-xs text-[#a0a0b8]">{label}</p>
     </div>
   );
 }

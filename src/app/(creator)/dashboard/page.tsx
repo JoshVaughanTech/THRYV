@@ -131,18 +131,18 @@ export default async function CreatorDashboardPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-          <p className="text-[#888888] mt-1">
+          <p className="text-[#a0a0b8] mt-1">
             Welcome back, {firstName}. Here&apos;s your {currentMonth.split(' ')[0]} overview.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-xl border border-[#1E1E1E] bg-[#141414] px-4 py-2.5">
-            <Calendar className="h-4 w-4 text-[#888888]" />
+          <div className="flex items-center gap-2 rounded-xl border border-[#2a2a3a] bg-[#15151f] px-4 py-2.5">
+            <Calendar className="h-4 w-4 text-[#a0a0b8]" />
             <span className="text-sm font-medium text-white">{currentMonth}</span>
           </div>
           <Link
             href="/builder"
-            className="flex items-center gap-2 rounded-xl bg-[#B4F000] px-4 py-2.5 text-sm font-bold text-[#0A0A0A] hover:bg-[#C5F53A] transition-colors"
+            className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors"
           >
             <Plus className="h-4 w-4" />
             New program
@@ -185,7 +185,7 @@ export default async function CreatorDashboardPage() {
 
       {/* Charts Row */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="col-span-2 rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+        <div className="col-span-2 rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
           <h2 className="text-lg font-bold text-white mb-1">Workout completions</h2>
           <CreatorCharts
             data7d={chartData.data7d}
@@ -194,19 +194,19 @@ export default async function CreatorDashboardPage() {
           />
         </div>
 
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
           <h2 className="text-lg font-bold text-white mb-4">Earnings breakdown</h2>
           <CreatorCharts donut totalEarnings={totalEarnings} />
         </div>
       </div>
 
       {/* Programs Table */}
-      <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+      <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-white">Programs</h2>
           <Link
             href="/builder"
-            className="text-sm font-medium text-[#B4F000] hover:text-[#C5F53A] transition-colors"
+            className="text-sm font-medium text-[#6c5ce7] hover:text-[#7c6ff0] transition-colors"
           >
             View all
           </Link>
@@ -214,7 +214,7 @@ export default async function CreatorDashboardPage() {
 
         <table className="w-full">
           <thead>
-            <tr className="text-[10px] text-[#555555] uppercase tracking-[1px]">
+            <tr className="text-[10px] text-[#6b6b80] uppercase tracking-[1px]">
               <th className="text-left pb-4 font-medium">Program</th>
               <th className="text-center pb-4 font-medium">Active</th>
               <th className="text-center pb-4 font-medium">Completions</th>
@@ -226,52 +226,52 @@ export default async function CreatorDashboardPage() {
           </thead>
           <tbody>
             {programStats.map((program: any) => (
-              <tr key={program.id} className="border-t border-[#1E1E1E]">
+              <tr key={program.id} className="border-t border-[#2a2a3a]">
                 <td className="py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#1A1A1A] flex items-center justify-center">
-                      <Zap className="h-4 w-4 text-[#B4F000]" />
+                    <div className="w-10 h-10 rounded-xl bg-[#1f1f2e] flex items-center justify-center">
+                      <Zap className="h-4 w-4 text-[#6c5ce7]" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">{program.title}</p>
-                      <p className="text-[11px] text-[#555555]">
+                      <p className="text-[11px] text-[#6b6b80]">
                         {program.duration_weeks} weeks &middot; {program.experience_level || 'All'}
                       </p>
                     </div>
                   </div>
                 </td>
-                <td className="text-center text-sm text-[#888888]">
+                <td className="text-center text-sm text-[#a0a0b8]">
                   {program.activeUsers > 0 ? program.activeUsers.toLocaleString() : '—'}
                 </td>
-                <td className="text-center text-sm text-[#888888]">
+                <td className="text-center text-sm text-[#a0a0b8]">
                   {program.completions > 0 ? program.completions.toLocaleString() : '—'}
                 </td>
-                <td className="text-center text-sm text-[#888888]">
+                <td className="text-center text-sm text-[#a0a0b8]">
                   {program.avgTime > 0 ? `${program.avgTime} min` : '—'}
                 </td>
                 <td className="pl-4">
                   {program.activeUsers > 0 ? (
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-[#1E1E1E] max-w-[80px]">
+                      <div className="flex-1 h-1.5 rounded-full bg-[#2a2a3a] max-w-[80px]">
                         <div
-                          className="h-full rounded-full bg-[#B4F000]"
+                          className="h-full rounded-full bg-[#6c5ce7]"
                           style={{ width: `${program.engagementPct}%` }}
                         />
                       </div>
-                      <span className="text-xs text-[#555555]">{program.engagementPct}%</span>
+                      <span className="text-xs text-[#6b6b80]">{program.engagementPct}%</span>
                     </div>
                   ) : (
-                    <span className="text-sm text-[#555555]">—</span>
+                    <span className="text-sm text-[#6b6b80]">—</span>
                   )}
                 </td>
-                <td className="text-right text-sm font-medium text-[#B4F000]">
+                <td className="text-right text-sm font-medium text-[#6c5ce7]">
                   {program.revenue > 0 ? `$${program.revenue.toLocaleString()}` : '—'}
                 </td>
                 <td className="text-right">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] ${
                     program.status === 'published'
-                      ? 'bg-[#1A2A0A] text-[#B4F000]'
-                      : 'bg-[#1A1A1A] text-[#555555]'
+                      ? 'bg-[#1A2A0A] text-[#6c5ce7]'
+                      : 'bg-[#1f1f2e] text-[#6b6b80]'
                   }`}>
                     {program.status === 'published' ? 'Live' : program.status}
                   </span>
@@ -303,19 +303,19 @@ function KPICard({
   return (
     <div className={`rounded-2xl border p-5 ${
       highlight
-        ? 'border-[#B4F000]/30 bg-[#B4F000]/5'
-        : 'border-[#1E1E1E] bg-[#141414]'
+        ? 'border-[#6c5ce7]/30 bg-[#6c5ce7]/5'
+        : 'border-[#2a2a3a] bg-[#15151f]'
     }`}>
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium">{label}</p>
-        <Icon className={`h-4 w-4 ${highlight ? 'text-[#B4F000]' : 'text-[#555555]'}`} />
+        <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">{label}</p>
+        <Icon className={`h-4 w-4 ${highlight ? 'text-[#6c5ce7]' : 'text-[#6b6b80]'}`} />
       </div>
-      <p className={`text-3xl font-bold mb-1 ${highlight ? 'text-[#B4F000]' : 'text-white'}`}>
+      <p className={`text-3xl font-bold mb-1 ${highlight ? 'text-[#6c5ce7]' : 'text-white'}`}>
         {value}
       </p>
       <p className="text-xs">
-        <span className="text-[#B4F000] font-medium">{trend}</span>
-        <span className="text-[#555555] ml-1">{trendLabel}</span>
+        <span className="text-[#6c5ce7] font-medium">{trend}</span>
+        <span className="text-[#6b6b80] ml-1">{trendLabel}</span>
       </p>
     </div>
   );

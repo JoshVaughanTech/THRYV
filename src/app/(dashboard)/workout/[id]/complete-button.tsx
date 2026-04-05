@@ -115,10 +115,10 @@ export function CompleteWorkoutButton({
 
   if (isCompleted) {
     return (
-      <div className="bg-[#B4F000] rounded-[14px] py-[15px] text-center">
+      <div className="bg-[#6c5ce7] rounded-[14px] py-[15px] text-center">
         <div className="flex items-center justify-center gap-2">
-          <Check className="h-5 w-5 text-[#0A0A0A]" strokeWidth={3} />
-          <span className="text-[#0A0A0A] text-[14px] font-bold tracking-[0.5px]">
+          <Check className="h-5 w-5 text-white" strokeWidth={3} />
+          <span className="text-white text-[14px] font-bold tracking-[0.5px]">
             COMPLETE  +{momentumReward}
           </span>
         </div>
@@ -132,8 +132,8 @@ export function CompleteWorkoutButton({
       disabled={loading}
       className="w-full py-[15px] rounded-[14px] text-[14px] font-bold tracking-[0.5px] transition-all cursor-pointer disabled:opacity-50"
       style={{
-        background: allDone || started ? '#B4F000' : '#333333',
-        color: allDone || started ? '#0A0A0A' : '#666666',
+        background: allDone || started ? '#6c5ce7' : '#2a2a3a',
+        color: allDone || started ? '#ffffff' : '#666666',
       }}
     >
       {loading

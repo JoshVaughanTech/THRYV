@@ -51,13 +51,13 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
   }
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-[#0A0A0A] border-r border-[#1E1E1E] flex flex-col z-40">
+    <aside className="fixed left-0 top-0 bottom-0 w-[260px] bg-[#0a0a0f] border-r border-[#2a2a3a] flex flex-col z-40">
       {/* Logo + Badge */}
       <div className="px-6 py-6">
         <div className="flex items-center gap-3">
-          <Zap className="h-5 w-5 text-[#B4F000]" />
+          <Zap className="h-5 w-5 text-[#6c5ce7]" />
           <span className="text-lg font-bold text-white tracking-[2px]">THRYV</span>
-          <span className="ml-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-[1px] bg-[#B4F000] text-[#0A0A0A]">
+          <span className="ml-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-[1px] bg-[#6c5ce7] text-white">
             Creator
           </span>
         </div>
@@ -74,8 +74,8 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
               className={clsx(
                 'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-[#B4F000] text-[#0A0A0A]'
-                  : 'text-[#888888] hover:bg-[#141414] hover:text-white'
+                  ? 'bg-[#6c5ce7] text-white'
+                  : 'text-[#a0a0b8] hover:bg-[#15151f] hover:text-white'
               )}
             >
               <item.icon className={clsx('h-[18px] w-[18px]', isActive && 'stroke-[2.5px]')} />
@@ -86,19 +86,19 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
       </nav>
 
       {/* User Profile + Sign Out */}
-      <div className="border-t border-[#1E1E1E] p-4">
+      <div className="border-t border-[#2a2a3a] p-4">
         <div className="flex items-center gap-3 px-2 mb-3">
-          <div className="w-10 h-10 rounded-full border-2 border-[#B4F000] flex items-center justify-center text-sm font-bold text-[#B4F000]">
+          <div className="w-10 h-10 rounded-full border-2 border-[#6c5ce7] flex items-center justify-center text-sm font-bold text-[#6c5ce7]">
             {initials}
           </div>
           <div className="min-w-0">
             <p className="text-sm font-medium text-white truncate">{profile.full_name || 'Creator'}</p>
-            <p className="text-[11px] text-[#888888]">PRO Creator</p>
+            <p className="text-[11px] text-[#a0a0b8]">PRO Creator</p>
           </div>
         </div>
         <button
           onClick={handleSignOut}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-[#555555] hover:bg-[#141414] hover:text-[#888888] transition-all cursor-pointer"
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-[#6b6b80] hover:bg-[#15151f] hover:text-[#a0a0b8] transition-all cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
           Sign Out

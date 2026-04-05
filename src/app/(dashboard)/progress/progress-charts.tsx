@@ -34,15 +34,15 @@ function TimeRangeToggle({
 }) {
   const options: TimeRange[] = ['WEEK', 'MONTH', 'ALL'];
   return (
-    <div className="flex rounded-lg bg-[#141414] border border-[#1E1E1E] p-0.5">
+    <div className="flex rounded-lg bg-[#15151f] border border-[#2a2a3a] p-0.5">
       {options.map((opt) => (
         <button
           key={opt}
           onClick={() => onChange(opt)}
           className={`px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors tracking-wide ${
             value === opt
-              ? 'bg-[#1E1E1E] text-white'
-              : 'text-[#555555] hover:text-[#999999]'
+              ? 'bg-[#2a2a3a] text-white'
+              : 'text-[#6b6b80] hover:text-[#a0a0b8]'
           }`}
         >
           {opt}
@@ -86,11 +86,11 @@ export function ProgressCharts({
         <div className="relative">
           <DualProgressRing
             outerPercentage={workoutPct}
-            outerColor="#B4F000"
+            outerColor="#6c5ce7"
             outerLabel="Workouts"
             outerValue={`${avgPerWeek}/wk`}
             innerPercentage={consistencyPct}
-            innerColor="#7ED957"
+            innerColor="#00d2ff"
             innerLabel="Consistency"
             innerValue={`${consistencyDays}/7 days`}
             size={180}
@@ -101,7 +101,7 @@ export function ProgressCharts({
             style={{ marginBottom: '28px' }}
           >
             <span className="text-2xl font-bold text-white">{workoutPct}%</span>
-            <span className="text-[10px] text-[#555555] uppercase tracking-[1px]">
+            <span className="text-[10px] text-[#6b6b80] uppercase tracking-[1px]">
               Weekly goal
             </span>
           </div>
@@ -112,28 +112,28 @@ export function ProgressCharts({
       <div className="grid grid-cols-3 gap-3">
         {/* Momentum */}
         <Card className="text-center py-4 px-2">
-          <div className="w-9 h-9 rounded-lg bg-[#B4F000]/10 flex items-center justify-center mx-auto mb-2">
-            <Zap className="h-4 w-4" style={{ color: '#B4F000' }} />
+          <div className="w-9 h-9 rounded-lg bg-[#6c5ce7]/10 flex items-center justify-center mx-auto mb-2">
+            <Zap className="h-4 w-4" style={{ color: '#6c5ce7' }} />
           </div>
           <p className="text-xl font-bold text-white">{momentum}</p>
-          <p className="text-[9px] text-[#555555] uppercase tracking-[1.5px] mt-0.5">
+          <p className="text-[9px] text-[#6b6b80] uppercase tracking-[1.5px] mt-0.5">
             Momentum
           </p>
-          <span className="inline-block mt-2 text-[10px] font-semibold rounded-full px-2 py-0.5 bg-[#1A2A0A] text-[#B4F000]">
+          <span className="inline-block mt-2 text-[10px] font-semibold rounded-full px-2 py-0.5 bg-[#1A2A0A] text-[#6c5ce7]">
             LEVEL {momentumLevel}
           </span>
         </Card>
 
         {/* Day Streak */}
         <Card className="text-center py-4 px-2">
-          <div className="w-9 h-9 rounded-lg bg-[#F0A000]/10 flex items-center justify-center mx-auto mb-2">
-            <Sun className="h-4 w-4" style={{ color: '#F0A000' }} />
+          <div className="w-9 h-9 rounded-lg bg-[#ffab00]/10 flex items-center justify-center mx-auto mb-2">
+            <Sun className="h-4 w-4" style={{ color: '#ffab00' }} />
           </div>
           <p className="text-xl font-bold text-white">{currentStreak}</p>
-          <p className="text-[9px] text-[#555555] uppercase tracking-[1.5px] mt-0.5">
+          <p className="text-[9px] text-[#6b6b80] uppercase tracking-[1.5px] mt-0.5">
             Day Streak
           </p>
-          <span className="inline-block mt-2 text-[10px] font-semibold rounded-full px-2 py-0.5 bg-[#1A1400] text-[#F0A000]">
+          <span className="inline-block mt-2 text-[10px] font-semibold rounded-full px-2 py-0.5 bg-[#1A1400] text-[#ffab00]">
             BEST: {longestStreak}
           </span>
         </Card>
@@ -144,7 +144,7 @@ export function ProgressCharts({
             <Clock className="h-4 w-4" style={{ color: '#7799DD' }} />
           </div>
           <p className="text-xl font-bold text-white">{hrsPerWeek}</p>
-          <p className="text-[9px] text-[#555555] uppercase tracking-[1.5px] mt-0.5">
+          <p className="text-[9px] text-[#6b6b80] uppercase tracking-[1.5px] mt-0.5">
             Hrs / Week
           </p>
           <span className="inline-block mt-2 text-[10px] font-semibold rounded-full px-2 py-0.5 bg-[#0A1A2A] text-[#7799DD]">
@@ -156,8 +156,8 @@ export function ProgressCharts({
       {/* Momentum Bar Chart */}
       <Card>
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="h-4 w-4" style={{ color: '#B4F000' }} />
-          <h3 className="text-[11px] font-semibold text-[#555555] uppercase tracking-[1.5px]">
+          <TrendingUp className="h-4 w-4" style={{ color: '#6c5ce7' }} />
+          <h3 className="text-[11px] font-semibold text-[#6b6b80] uppercase tracking-[1.5px]">
             Momentum This Week
           </h3>
         </div>
@@ -168,20 +168,20 @@ export function ProgressCharts({
       <Card>
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-white">Level {momentumLevel}</h3>
-          <span className="text-sm text-[#999999]">
+          <span className="text-sm text-[#a0a0b8]">
             {nextLevelProgress.toLocaleString()} / {nextLevelTotal.toLocaleString()}
           </span>
         </div>
-        <div className="h-2.5 rounded-full bg-[#1E1E1E] overflow-hidden mb-2">
+        <div className="h-2.5 rounded-full bg-[#2a2a3a] overflow-hidden mb-2">
           <div
             className="h-full rounded-full transition-all duration-700 ease-out"
             style={{
               width: `${Math.min(100, (nextLevelProgress / (nextLevelTotal || 1)) * 100)}%`,
-              background: 'linear-gradient(90deg, #7ED957, #B4F000)',
+              background: 'linear-gradient(90deg, #00d2ff, #6c5ce7)',
             }}
           />
         </div>
-        <p className="text-xs text-[#555555]">
+        <p className="text-xs text-[#6b6b80]">
           {pointsToNextLevel} momentum to Level {momentumLevel + 1}
         </p>
       </Card>

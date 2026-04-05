@@ -13,7 +13,7 @@ export default function ProgramsLoading() {
         <Skeleton className="h-6 w-32 mb-4" />
         <div className="flex gap-4 overflow-hidden">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex-shrink-0 w-[280px] rounded-2xl border border-[#1E1E1E] bg-[#141414] p-5">
+            <div key={i} className="flex-shrink-0 w-[280px] rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-5">
               <div className="flex items-center gap-4 mb-4">
                 <Skeleton className="w-14 h-14 rounded-full" />
                 <div>
@@ -22,7 +22,7 @@ export default function ProgramsLoading() {
                 </div>
               </div>
               <Skeleton className="h-3 w-3/4 mb-4" />
-              <div className="grid grid-cols-3 gap-3 border-t border-[#1E1E1E] pt-4">
+              <div className="grid grid-cols-3 gap-3 border-t border-[#2a2a3a] pt-4">
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-10 w-full" />

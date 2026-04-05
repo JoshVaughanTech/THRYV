@@ -128,11 +128,11 @@ export default async function CreatorCommunityPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Community</h1>
-          <p className="text-[#888888] mt-1">
+          <p className="text-[#a0a0b8] mt-1">
             Manage and engage with your program communities.
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-xl bg-[#B4F000] px-4 py-2.5 text-sm font-bold text-[#0A0A0A] hover:bg-[#C5F53A] transition-colors">
+        <button className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors">
           <Plus className="h-4 w-4" />
           New post
         </button>
@@ -140,13 +140,13 @@ export default async function CreatorCommunityPage() {
 
       {/* Filter Pills */}
       <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
-        <button className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium bg-[#B4F000] text-[#0A0A0A] transition-colors">
+        <button className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium bg-[#6c5ce7] text-white transition-colors">
           All programs
         </button>
         {(programs || []).map((program: any) => (
           <button
             key={program.id}
-            className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium border border-[#2A2A2A] text-[#888888] hover:border-[#444444] hover:text-white transition-colors"
+            className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium border border-[#2a2a3a] text-[#a0a0b8] hover:border-[#4a4a5a] hover:text-white transition-colors"
           >
             {program.title}
           </button>
@@ -155,9 +155,9 @@ export default async function CreatorCommunityPage() {
 
       {/* Stats Bar */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-5">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium">
+            <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">
               Total posts
             </p>
           </div>
@@ -165,16 +165,16 @@ export default async function CreatorCommunityPage() {
             {(totalPostCount ?? 0).toLocaleString()}
           </p>
           <p className="text-xs mt-1">
-            <span className="text-[#B4F000] font-medium">
+            <span className="text-[#6c5ce7] font-medium">
               +{postsThisWeek ?? 0}
             </span>
-            <span className="text-[#555555] ml-1">this week</span>
+            <span className="text-[#6b6b80] ml-1">this week</span>
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-5">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium">
+            <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">
               Comments
             </p>
           </div>
@@ -182,25 +182,25 @@ export default async function CreatorCommunityPage() {
             {(totalCommentCount ?? 0).toLocaleString()}
           </p>
           <p className="text-xs mt-1">
-            <span className="text-[#B4F000] font-medium">
+            <span className="text-[#6c5ce7] font-medium">
               +{commentsThisWeek ?? 0}
             </span>
-            <span className="text-[#555555] ml-1">this week</span>
+            <span className="text-[#6b6b80] ml-1">this week</span>
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-5">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium">
+            <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">
               Engagement rate
             </p>
           </div>
           <p className="text-3xl font-bold text-white">{engagementRate}%</p>
           <p className="text-xs mt-1">
-            <span className="text-[#B4F000] font-medium">
+            <span className="text-[#6c5ce7] font-medium">
               {weeklyActivity} interactions
             </span>
-            <span className="text-[#555555] ml-1">this week</span>
+            <span className="text-[#6b6b80] ml-1">this week</span>
           </p>
         </div>
       </div>
@@ -208,10 +208,10 @@ export default async function CreatorCommunityPage() {
       {/* Feed */}
       <div className="space-y-4">
         {(!posts || posts.length === 0) && (
-          <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-12 text-center">
-            <Users className="h-10 w-10 text-[#555555] mx-auto mb-3" />
+          <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-12 text-center">
+            <Users className="h-10 w-10 text-[#6b6b80] mx-auto mb-3" />
             <p className="text-white font-semibold mb-1">No posts yet</p>
-            <p className="text-[#555555] text-sm">
+            <p className="text-[#6b6b80] text-sm">
               Create your first community post to start engaging with your members.
             </p>
           </div>
@@ -226,15 +226,15 @@ export default async function CreatorCommunityPage() {
           return (
             <div
               key={post.id}
-              className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6"
+              className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6"
             >
               {/* Post Header */}
               <div className="flex items-start gap-3 mb-3">
                 <div
                   className={`w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                     isCreator
-                      ? 'border-2 border-[#B4F000] bg-[#1A2A0A] text-[#B4F000]'
-                      : 'bg-[#1E1E1E] text-[#888888]'
+                      ? 'border-2 border-[#6c5ce7] bg-[#1A2A0A] text-[#6c5ce7]'
+                      : 'bg-[#2a2a3a] text-[#a0a0b8]'
                   }`}
                 >
                   {getInitials(authorName)}
@@ -245,12 +245,12 @@ export default async function CreatorCommunityPage() {
                       {authorName}
                     </span>
                     {isCreator && (
-                      <span className="inline-flex items-center rounded-full bg-[#1A2A0A] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#B4F000]">
+                      <span className="inline-flex items-center rounded-full bg-[#1A2A0A] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#6c5ce7]">
                         Creator
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[#555555]">
+                  <p className="text-[11px] text-[#6b6b80]">
                     {programTitle} &middot; {timeAgo(post.created_at)}
                   </p>
                 </div>
@@ -262,12 +262,12 @@ export default async function CreatorCommunityPage() {
               </p>
 
               {/* Post Actions */}
-              <div className="border-t border-[#1E1E1E] pt-3 flex items-center gap-4">
-                <button className="flex items-center gap-1.5 text-[#555555] hover:text-[#B4F000] transition-colors text-sm">
+              <div className="border-t border-[#2a2a3a] pt-3 flex items-center gap-4">
+                <button className="flex items-center gap-1.5 text-[#6b6b80] hover:text-[#6c5ce7] transition-colors text-sm">
                   <Heart className="h-4 w-4" />
                   <span>Like</span>
                 </button>
-                <button className="flex items-center gap-1.5 text-[#555555] hover:text-[#7799DD] transition-colors text-sm">
+                <button className="flex items-center gap-1.5 text-[#6b6b80] hover:text-[#7799DD] transition-colors text-sm">
                   <MessageCircle className="h-4 w-4" />
                   <span>{commentCount > 0 ? `${commentCount} ${commentCount === 1 ? 'Reply' : 'Replies'}` : 'Reply'}</span>
                 </button>

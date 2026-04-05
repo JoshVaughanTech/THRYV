@@ -65,7 +65,7 @@ export default function CreatorOnboardingPage() {
 
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-lg momentum-gradient flex items-center justify-center">
-            <PenTool className="h-5 w-5 text-[#0A0A0A]" />
+            <PenTool className="h-5 w-5 text-white" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-text-primary">Become a Creator</h1>

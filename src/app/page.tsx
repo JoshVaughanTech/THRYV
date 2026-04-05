@@ -29,7 +29,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-4 py-2 text-sm font-bold text-[#0A0A0A] transition-all shadow-lg shadow-accent-primary/20"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-4 py-2 text-sm font-bold text-white transition-all shadow-lg shadow-accent-primary/20"
             >
               Start Free Trial
               <ChevronRight className="h-4 w-4" />
@@ -69,7 +69,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-8 py-3.5 text-base font-bold text-[#0A0A0A] transition-all shadow-lg shadow-accent-primary/25 glow"
+              className="inline-flex items-center gap-2 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-8 py-3.5 text-base font-bold text-white transition-all shadow-lg shadow-accent-primary/25 glow"
             >
               Start 7-Day Free Trial
               <ChevronRight className="h-5 w-5" />
@@ -178,7 +178,7 @@ export default function LandingPage() {
             ].map((item) => (
               <div key={item.step} className="flex gap-6 items-start">
                 <div className="flex-shrink-0 w-12 h-12 rounded-lg momentum-gradient flex items-center justify-center">
-                  <span className="text-sm font-bold text-[#0A0A0A]">{item.step}</span>
+                  <span className="text-sm font-bold text-white">{item.step}</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-text-primary mb-1">{item.title}</h3>

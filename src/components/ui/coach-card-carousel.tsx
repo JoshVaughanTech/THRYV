@@ -22,7 +22,7 @@ interface CoachCardCarouselProps {
 
 function CoachCard({ coach }: { coach: Coach }) {
   return (
-    <div className="flex-shrink-0 w-[280px] rounded-2xl border border-[#1E1E1E] bg-[#141414] p-5 snap-start">
+    <div className="flex-shrink-0 w-[280px] rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-5 snap-start">
       {/* Avatar */}
       <div className="flex items-center gap-4 mb-4">
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-accent-primary/30 to-accent-secondary/30 flex items-center justify-center text-xl font-bold text-accent-primary flex-shrink-0 overflow-hidden">
@@ -51,7 +51,7 @@ function CoachCard({ coach }: { coach: Coach }) {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3 border-t border-[#1E1E1E] pt-4">
+      <div className="grid grid-cols-3 gap-3 border-t border-[#2a2a3a] pt-4">
         <div className="text-center">
           <div className="flex items-center justify-center mb-1">
             <Users className="h-3.5 w-3.5 text-text-muted" />
@@ -104,13 +104,13 @@ export function CoachCardCarousel({ coaches }: CoachCardCarouselProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => scroll('left')}
-            className="w-8 h-8 rounded-full border border-[#2A2A2A] flex items-center justify-center text-text-muted hover:text-text-primary hover:border-text-muted transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full border border-[#2a2a3a] flex items-center justify-center text-text-muted hover:text-text-primary hover:border-text-muted transition-colors cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
           <button
             onClick={() => scroll('right')}
-            className="w-8 h-8 rounded-full border border-[#2A2A2A] flex items-center justify-center text-text-muted hover:text-text-primary hover:border-text-muted transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full border border-[#2a2a3a] flex items-center justify-center text-text-muted hover:text-text-primary hover:border-text-muted transition-colors cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

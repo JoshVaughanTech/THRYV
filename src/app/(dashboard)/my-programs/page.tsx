@@ -94,19 +94,19 @@ export default async function MyProgramsPage() {
   const todayLabel = now.toLocaleDateString('en-US', { weekday: 'long' });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Header */}
       <div className="px-5 pt-4 pb-2">
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-[#555555] text-[10px] uppercase tracking-[1.5px]">
+            <div className="text-[#6b6b80] text-[10px] uppercase tracking-[1.5px]">
               Week {activePrograms[0]?.current_week || 1} of {activePrograms[0]?.programs?.duration_weeks || '—'}
             </div>
             <div className="text-white text-xl font-bold mt-0.5">My training</div>
           </div>
-          <div className="bg-[#141414] border border-[#1E1E1E] rounded-xl px-3 py-1.5 flex items-center gap-1.5">
-            <Zap className="h-3.5 w-3.5 text-[#B4F000]" />
-            <span className="text-[#B4F000] text-[13px] font-bold">{(momentum || 0).toLocaleString()}</span>
+          <div className="bg-[#15151f] border border-[#2a2a3a] rounded-xl px-3 py-1.5 flex items-center gap-1.5">
+            <Zap className="h-3.5 w-3.5 text-[#6c5ce7]" />
+            <span className="text-[#6c5ce7] text-[13px] font-bold">{(momentum || 0).toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -115,11 +115,11 @@ export default async function MyProgramsPage() {
       <div className="px-5 py-1.5 flex gap-1.5">
         {(streak?.current_streak || 0) > 0 && (
           <div className="flex items-center gap-1 bg-[#1A1400] border border-[#3D3000] rounded-lg px-2.5 py-[5px]">
-            <span className="text-[#F0A000] text-[10px] font-bold">🔥 {streak.current_streak} day streak</span>
+            <span className="text-[#ffab00] text-[10px] font-bold">🔥 {streak.current_streak} day streak</span>
           </div>
         )}
-        <div className="bg-[#141414] border border-[#1E1E1E] rounded-lg px-2.5 py-[5px]">
-          <span className="text-[#888888] text-[10px] font-semibold">{completedCount} of {totalThisWeek} complete</span>
+        <div className="bg-[#15151f] border border-[#2a2a3a] rounded-lg px-2.5 py-[5px]">
+          <span className="text-[#a0a0b8] text-[10px] font-semibold">{completedCount} of {totalThisWeek} complete</span>
         </div>
       </div>
 
@@ -132,13 +132,13 @@ export default async function MyProgramsPage() {
 
           return (
             <div key={label} className="text-center w-[38px]">
-              <div className="text-[#555555] text-[9px] uppercase">{label}</div>
+              <div className="text-[#6b6b80] text-[9px] uppercase">{label}</div>
               <div
                 className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[12px] font-semibold mx-auto mt-1"
                 style={{
-                  background: isDone ? '#B4F000' : isToday ? 'transparent' : '#1A1A1A',
-                  border: isToday ? '2px solid #B4F000' : 'none',
-                  color: isDone ? '#0A0A0A' : isToday ? '#FFFFFF' : '#555555',
+                  background: isDone ? '#6c5ce7' : isToday ? 'transparent' : '#1f1f2e',
+                  border: isToday ? '2px solid #6c5ce7' : 'none',
+                  color: isDone ? '#0a0a0f' : isToday ? '#FFFFFF' : '#6b6b80',
                   fontWeight: isDone || isToday ? 700 : 600,
                 }}
               >
@@ -155,7 +155,7 @@ export default async function MyProgramsPage() {
 
       {/* Today label */}
       <div className="px-5 py-1.5">
-        <span className="text-[#555555] text-[10px] font-semibold uppercase tracking-[1px]">
+        <span className="text-[#6b6b80] text-[10px] font-semibold uppercase tracking-[1px]">
           Today — {todayLabel}
         </span>
       </div>
@@ -165,21 +165,21 @@ export default async function MyProgramsPage() {
         {/* Up Next */}
         {upNext && (
           <Link href={`/workout/${upNext.id}`}>
-            <div className="bg-[#141414] rounded-2xl p-4 border border-[#B4F000] relative mb-2">
+            <div className="bg-[#15151f] rounded-2xl p-4 border border-[#6c5ce7] relative mb-2">
               <div className="absolute top-3 right-3 bg-[#1A2A0A] border border-[#2A4A0A] rounded-lg px-2 py-[3px]">
-                <span className="text-[#B4F000] text-[8px] font-bold tracking-[0.5px]">UP NEXT</span>
+                <span className="text-[#6c5ce7] text-[8px] font-bold tracking-[0.5px]">UP NEXT</span>
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-[26px] h-[26px] rounded-full bg-gradient-to-br from-[#2A2A1A] to-[#1A1A0A] flex items-center justify-center">
-                  <span className="text-[#B4F000] text-[9px] font-extrabold">{upNext.creatorInitials}</span>
+                  <span className="text-[#6c5ce7] text-[9px] font-extrabold">{upNext.creatorInitials}</span>
                 </div>
-                <span className="text-[#555555] text-[10px]">{upNext.programTitle} · Week {upNext.weekNumber}</span>
+                <span className="text-[#6b6b80] text-[10px]">{upNext.programTitle} · Week {upNext.weekNumber}</span>
               </div>
               <div className="text-white text-[15px] font-bold mb-[3px]">{upNext.title}</div>
-              <div className="text-[#555555] text-[11px] mb-3">
+              <div className="text-[#6b6b80] text-[11px] mb-3">
                 {upNext.exercises?.length || '—'} exercises · ~{upNext.estimated_duration || 45} min
               </div>
-              <div className="w-full py-[11px] bg-[#B4F000] text-[#0A0A0A] rounded-[10px] text-center text-[12px] font-bold tracking-[0.5px]">
+              <div className="w-full py-[11px] bg-[#6c5ce7] text-white rounded-[10px] text-center text-[12px] font-bold tracking-[0.5px]">
                 START WORKOUT
               </div>
             </div>
@@ -193,21 +193,21 @@ export default async function MyProgramsPage() {
 
           return (
             <Link key={workout.id} href={`/workout/${workout.id}`}>
-              <div className="bg-[#141414] rounded-[14px] p-3 border border-[#1E1E1E] opacity-60 mb-2">
+              <div className="bg-[#15151f] rounded-[14px] p-3 border border-[#2a2a3a] opacity-60 mb-2">
                 <div className="flex items-center gap-2 mb-1.5">
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#2A1A2A] to-[#1A0A1A] flex items-center justify-center">
                     <span className="text-[#B477D9] text-[8px] font-extrabold">{workout.creatorInitials}</span>
                   </div>
-                  <span className="text-[#555555] text-[10px]">{workout.programTitle} · Week {workout.weekNumber}</span>
+                  <span className="text-[#6b6b80] text-[10px]">{workout.programTitle} · Week {workout.weekNumber}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <div className="text-[#999999] text-[13px] font-semibold">{workout.title}</div>
-                    <div className="text-[#555555] text-[10px]">
+                    <div className="text-[#a0a0b8] text-[13px] font-semibold">{workout.title}</div>
+                    <div className="text-[#6b6b80] text-[10px]">
                       {workout.exercises?.length || '—'} exercises · ~{workout.estimated_duration || 45} min
                     </div>
                   </div>
-                  <span className="text-[#444444] text-[10px] font-semibold">{dayLabel}</span>
+                  <span className="text-[#4a4a5a] text-[10px] font-semibold">{dayLabel}</span>
                 </div>
               </div>
             </Link>
@@ -217,24 +217,24 @@ export default async function MyProgramsPage() {
         {/* Completed */}
         {completed.length > 0 && (
           <>
-            <div className="text-[#333333] text-[10px] uppercase tracking-[1px] font-semibold pt-3 pb-1">
+            <div className="text-[#2a2a3a] text-[10px] uppercase tracking-[1px] font-semibold pt-3 pb-1">
               Completed
             </div>
             {completed.map((workout) => (
-              <div key={workout.id} className="bg-[#141414] rounded-[14px] p-3 border border-[#1E1E1E] mb-2">
+              <div key={workout.id} className="bg-[#15151f] rounded-[14px] p-3 border border-[#2a2a3a] mb-2">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-[26px] h-[26px] rounded-full bg-[#B4F000] flex items-center justify-center">
-                      <Check className="h-[13px] w-[13px] text-[#0A0A0A]" strokeWidth={3} />
+                    <div className="w-[26px] h-[26px] rounded-full bg-[#6c5ce7] flex items-center justify-center">
+                      <Check className="h-[13px] w-[13px] text-white" strokeWidth={3} />
                     </div>
                     <div>
-                      <div className="text-[#888888] text-[13px] font-semibold">{workout.title}</div>
-                      <div className="text-[#444444] text-[10px]">{workout.programTitle}</div>
+                      <div className="text-[#a0a0b8] text-[13px] font-semibold">{workout.title}</div>
+                      <div className="text-[#4a4a5a] text-[10px]">{workout.programTitle}</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[#B4F000] text-[12px] font-bold">+10</div>
-                    <div className="text-[#555555] text-[8px]">MOMENTUM</div>
+                    <div className="text-[#6c5ce7] text-[12px] font-bold">+10</div>
+                    <div className="text-[#6b6b80] text-[8px]">MOMENTUM</div>
                   </div>
                 </div>
               </div>
@@ -245,9 +245,9 @@ export default async function MyProgramsPage() {
         {/* Empty state */}
         {weeklyWorkouts.length === 0 && (
           <div className="text-center py-16">
-            <Zap className="h-8 w-8 text-[#555555] mx-auto mb-3" />
-            <p className="text-[#888888] mb-2">No active programs</p>
-            <Link href="/programs" className="text-sm text-[#B4F000] hover:text-[#C5F53A] transition-colors">
+            <Zap className="h-8 w-8 text-[#6b6b80] mx-auto mb-3" />
+            <p className="text-[#a0a0b8] mb-2">No active programs</p>
+            <Link href="/programs" className="text-sm text-[#6c5ce7] hover:text-[#7c6ff0] transition-colors">
               Browse Programs
             </Link>
           </div>

@@ -22,7 +22,7 @@ export default async function CreatorLayout({
   if (profile.role !== 'creator' && profile.role !== 'admin') redirect('/home');
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-[#0a0a0f]">
       <CreatorSidebar profile={profile} />
       <main className="pl-[260px]">
         <div className="px-8 py-8 animate-fade-in">{children}</div>

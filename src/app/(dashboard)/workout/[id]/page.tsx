@@ -56,11 +56,11 @@ export default async function WorkoutDetailPage(props: {
       {/* Creator / Program info */}
       <div className="flex items-center gap-2 mb-5 px-1">
         <div className="w-[22px] h-[22px] rounded-full bg-gradient-to-br from-[#2A2A1A] to-[#1A1A0A] flex items-center justify-center">
-          <span className="text-[#B4F000] text-[7px] font-extrabold">
+          <span className="text-[#6c5ce7] text-[7px] font-extrabold">
             {creatorName.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
           </span>
         </div>
-        <span className="text-[#555555] text-[11px]">{creatorName} · {programTitle}</span>
+        <span className="text-[#6b6b80] text-[11px]">{creatorName} · {programTitle}</span>
       </div>
 
       {/* Stats Row */}
@@ -68,14 +68,14 @@ export default async function WorkoutDetailPage(props: {
         {[
           { value: String(exerciseCount), label: 'Exercises', color: 'white' },
           { value: `~${workout.estimated_duration || 45}`, label: 'Minutes', color: 'white' },
-          { value: `+${momentumReward}`, label: 'Momentum', color: '#B4F000' },
+          { value: `+${momentumReward}`, label: 'Momentum', color: '#6c5ce7' },
         ].map((stat) => (
           <div
             key={stat.label}
-            className="flex-1 bg-[#141414] border border-[#1E1E1E] rounded-[10px] py-[9px] text-center"
+            className="flex-1 bg-[#15151f] border border-[#2a2a3a] rounded-[10px] py-[9px] text-center"
           >
             <div className="text-[17px] font-bold" style={{ color: stat.color }}>{stat.value}</div>
-            <div className="text-[#555555] text-[8px] uppercase tracking-[0.5px]">{stat.label}</div>
+            <div className="text-[#6b6b80] text-[8px] uppercase tracking-[0.5px]">{stat.label}</div>
           </div>
         ))}
       </div>
@@ -86,7 +86,7 @@ export default async function WorkoutDetailPage(props: {
           exercises.map((exercise: any, index: number) => (
             <div
               key={exercise.id}
-              className="bg-[#141414] rounded-[14px] border border-[#1E1E1E] p-3"
+              className="bg-[#15151f] rounded-[14px] border border-[#2a2a3a] p-3"
             >
               <div className="flex justify-between items-start">
                 <div className="flex gap-2.5 items-center">
@@ -95,7 +95,7 @@ export default async function WorkoutDetailPage(props: {
                   </div>
                   <div>
                     <div className="text-white text-[13px] font-semibold">{exercise.name}</div>
-                    <div className="text-[#555555] text-[10px] mt-0.5">
+                    <div className="text-[#6b6b80] text-[10px] mt-0.5">
                       {exercise.sets && `${exercise.sets} sets`}
                       {exercise.reps && ` · ${exercise.reps} reps`}
                     </div>
@@ -105,14 +105,14 @@ export default async function WorkoutDetailPage(props: {
 
               {/* Tags row */}
               {(exercise.rest_seconds || exercise.rpe || exercise.video_url) && (
-                <div className="flex items-center gap-[5px] mt-2 pt-2 border-t border-[#1E1E1E]">
+                <div className="flex items-center gap-[5px] mt-2 pt-2 border-t border-[#2a2a3a]">
                   {exercise.rest_seconds && (
-                    <span className="bg-[#1A1A1A] text-[#888888] text-[8px] px-[7px] py-[3px] rounded-[5px]">
+                    <span className="bg-[#1f1f2e] text-[#a0a0b8] text-[8px] px-[7px] py-[3px] rounded-[5px]">
                       Rest: {exercise.rest_seconds}s
                     </span>
                   )}
                   {exercise.rpe && (
-                    <span className="bg-[#1A1A1A] text-[#888888] text-[8px] px-[7px] py-[3px] rounded-[5px]">
+                    <span className="bg-[#1f1f2e] text-[#a0a0b8] text-[8px] px-[7px] py-[3px] rounded-[5px]">
                       RPE {exercise.rpe}
                     </span>
                   )}
@@ -123,8 +123,8 @@ export default async function WorkoutDetailPage(props: {
                       rel="noopener noreferrer"
                       className="ml-auto flex items-center gap-[3px]"
                     >
-                      <Play className="h-[10px] w-[10px] text-[#555555]" />
-                      <span className="text-[#555555] text-[9px] font-semibold">VIDEO</span>
+                      <Play className="h-[10px] w-[10px] text-[#6b6b80]" />
+                      <span className="text-[#6b6b80] text-[9px] font-semibold">VIDEO</span>
                     </a>
                   )}
                 </div>
@@ -132,20 +132,20 @@ export default async function WorkoutDetailPage(props: {
 
               {/* Notes */}
               {exercise.notes && (
-                <p className="text-[10px] text-[#555555] mt-1.5 italic">{exercise.notes}</p>
+                <p className="text-[10px] text-[#6b6b80] mt-1.5 italic">{exercise.notes}</p>
               )}
             </div>
           ))
         ) : (
-          <div className="bg-[#141414] rounded-[14px] border border-[#1E1E1E] text-center py-8">
-            <p className="text-sm text-[#555555]">No exercises listed</p>
+          <div className="bg-[#15151f] rounded-[14px] border border-[#2a2a3a] text-center py-8">
+            <p className="text-sm text-[#6b6b80]">No exercises listed</p>
           </div>
         )}
       </div>
 
       {/* Complete Button - fixed at bottom */}
       <div className="fixed bottom-0 left-0 right-0 lg:relative lg:mt-4 z-30">
-        <div className="bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A] to-transparent px-5 py-5 pb-9 lg:p-0 lg:bg-none">
+        <div className="bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f] to-transparent px-5 py-5 pb-9 lg:p-0 lg:bg-none">
           <CompleteWorkoutButton
             workoutId={id}
             programId={workout.program_id}

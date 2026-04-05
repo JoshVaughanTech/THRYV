@@ -140,8 +140,8 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
   return (
     <div className="h-[calc(100vh-64px)] flex flex-col -mx-8 -my-8">
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-[#1E1E1E] bg-[#0A0A0A]">
-        <Link href="/builder" className="inline-flex items-center gap-1.5 text-sm text-[#555555] hover:text-[#888888] transition-colors">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-[#2a2a3a] bg-[#0a0a0f]">
+        <Link href="/builder" className="inline-flex items-center gap-1.5 text-sm text-[#6b6b80] hover:text-[#a0a0b8] transition-colors">
           <ArrowLeft className="h-4 w-4" />
           Back
         </Link>
@@ -161,32 +161,32 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
       {/* 3-Panel Layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Panel 1: Program structure */}
-        <div className="w-[380px] border-r border-[#1E1E1E] overflow-y-auto flex-shrink-0 bg-[#0A0A0A]">
+        <div className="w-[380px] border-r border-[#2a2a3a] overflow-y-auto flex-shrink-0 bg-[#0a0a0f]">
           <div className="p-5">
             <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4 text-[#555555]" />
+              <ArrowLeft className="h-4 w-4 text-[#6b6b80]" />
               Program structure
             </h2>
 
             {/* Program info card */}
-            <div className="rounded-xl border border-[#1E1E1E] bg-[#141414] p-4 mb-5">
+            <div className="rounded-xl border border-[#2a2a3a] bg-[#15151f] p-4 mb-5">
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="text-base font-bold bg-transparent text-white focus:outline-none w-full mb-1 border-b border-transparent focus:border-[#B4F000]"
+                className="text-base font-bold bg-transparent text-white focus:outline-none w-full mb-1 border-b border-transparent focus:border-[#6c5ce7]"
               />
-              <p className="text-xs text-[#555555] mb-3">
+              <p className="text-xs text-[#6b6b80] mb-3">
                 {program.duration_weeks} weeks &middot; {experienceLevel || 'All levels'} &middot; {discipline || 'General'}
               </p>
               <div className="flex items-center gap-2">
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] ${
                   program.status === 'published'
-                    ? 'bg-[#1A2A0A] text-[#B4F000]'
-                    : 'bg-[#1A1A1A] text-[#555555]'
+                    ? 'bg-[#1A2A0A] text-[#6c5ce7]'
+                    : 'bg-[#1f1f2e] text-[#6b6b80]'
                 }`}>
                   {program.status === 'published' ? 'Published' : program.status}
                 </span>
-                <span className="text-[10px] text-[#555555] uppercase tracking-[0.5px]">{creditCost} credit{creditCost !== 1 ? 's' : ''}</span>
+                <span className="text-[10px] text-[#6b6b80] uppercase tracking-[0.5px]">{creditCost} credit{creditCost !== 1 ? 's' : ''}</span>
               </div>
             </div>
 
@@ -203,20 +203,20 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
                       onClick={() => { toggleWeek(week.id); setSelectedWeekId(week.id); }}
                       className={`flex items-center justify-between w-full rounded-xl px-4 py-3 text-sm transition-all cursor-pointer ${
                         isSelectedWeek && isExpanded
-                          ? 'bg-[#B4F000]/10 border border-[#B4F000]/30'
-                          : 'border border-transparent hover:bg-[#141414]'
+                          ? 'bg-[#6c5ce7]/10 border border-[#6c5ce7]/30'
+                          : 'border border-transparent hover:bg-[#15151f]'
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         {isExpanded
-                          ? <ChevronDown className="h-3.5 w-3.5 text-[#888888]" />
-                          : <ChevronRight className="h-3.5 w-3.5 text-[#888888]" />
+                          ? <ChevronDown className="h-3.5 w-3.5 text-[#a0a0b8]" />
+                          : <ChevronRight className="h-3.5 w-3.5 text-[#a0a0b8]" />
                         }
-                        <span className={`font-medium ${isSelectedWeek ? 'text-[#B4F000]' : 'text-white'}`}>
+                        <span className={`font-medium ${isSelectedWeek ? 'text-[#6c5ce7]' : 'text-white'}`}>
                           Week {week.week_number}
                         </span>
                       </div>
-                      <span className="text-xs text-[#555555]">
+                      <span className="text-xs text-[#6b6b80]">
                         {workouts.length} workout{workouts.length !== 1 ? 's' : ''}
                       </span>
                     </button>
@@ -229,17 +229,17 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
                             onClick={() => { setSelectedWeekId(week.id); setSelectedWorkoutId(workout.id); }}
                             className={`flex items-center justify-between w-full rounded-lg px-4 py-2 text-[13px] transition-all cursor-pointer ${
                               selectedWorkoutId === workout.id
-                                ? 'bg-[#B4F000] text-[#0A0A0A] font-medium'
-                                : 'text-[#888888] hover:bg-[#141414] hover:text-white'
+                                ? 'bg-[#6c5ce7] text-white font-medium'
+                                : 'text-[#a0a0b8] hover:bg-[#15151f] hover:text-white'
                             }`}
                           >
                             <div className="flex items-center gap-2">
                               <span className={`w-1.5 h-1.5 rounded-full ${
-                                selectedWorkoutId === workout.id ? 'bg-[#0A0A0A]' : 'bg-[#B4F000]'
+                                selectedWorkoutId === workout.id ? 'bg-[#0a0a0f]' : 'bg-[#6c5ce7]'
                               }`} />
                               <span className="truncate">{workout.title}</span>
                             </div>
-                            <span className={`text-[11px] ${selectedWorkoutId === workout.id ? 'text-[#0A0A0A]/60' : 'text-[#555555]'}`}>
+                            <span className={`text-[11px] ${selectedWorkoutId === workout.id ? 'text-white/60' : 'text-[#6b6b80]'}`}>
                               {workout.exercises?.length || 0} ex
                             </span>
                           </button>
@@ -247,7 +247,7 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
 
                         <button
                           onClick={() => addWorkout(week.id, program.id)}
-                          className="flex items-center gap-1.5 w-full px-4 py-2 text-[12px] text-[#555555] hover:text-[#B4F000] transition-colors cursor-pointer"
+                          className="flex items-center gap-1.5 w-full px-4 py-2 text-[12px] text-[#6b6b80] hover:text-[#6c5ce7] transition-colors cursor-pointer"
                         >
                           <Plus className="h-3 w-3" />
                           Add workout
@@ -260,7 +260,7 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
             </div>
 
             {/* Add week placeholder */}
-            <button className="flex items-center justify-center gap-2 w-full mt-4 rounded-xl border border-dashed border-[#1E1E1E] py-3 text-xs text-[#555555] hover:text-[#888888] hover:border-[#888888] transition-colors cursor-pointer">
+            <button className="flex items-center justify-center gap-2 w-full mt-4 rounded-xl border border-dashed border-[#2a2a3a] py-3 text-xs text-[#6b6b80] hover:text-[#a0a0b8] hover:border-[#a0a0b8] transition-colors cursor-pointer">
               <Plus className="h-3.5 w-3.5" />
               Add week
             </button>
@@ -268,12 +268,12 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
         </div>
 
         {/* Panel 2: Exercise editor */}
-        <div className="flex-1 overflow-y-auto bg-[#0A0A0A]">
+        <div className="flex-1 overflow-y-auto bg-[#0a0a0f]">
           <div className="p-6">
             {selectedWorkout ? (
               <>
                 {/* Breadcrumb */}
-                <p className="text-xs text-[#555555] mb-2">
+                <p className="text-xs text-[#6b6b80] mb-2">
                   Week {selectedWeek?.week_number} &middot; Workout {
                     (selectedWeek?.workouts?.sort((a: any, b: any) => a.order_index - b.order_index)
                       .findIndex((w: any) => w.id === selectedWorkoutId) ?? 0) + 1
@@ -282,11 +282,11 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
 
                 {/* Workout name */}
                 <div className="mb-6">
-                  <label className="block text-[10px] text-[#555555] uppercase tracking-[1px] mb-1.5">Workout Name</label>
+                  <label className="block text-[10px] text-[#6b6b80] uppercase tracking-[1px] mb-1.5">Workout Name</label>
                   <input
                     defaultValue={selectedWorkout.title}
                     onBlur={(e) => updateWorkout(selectedWorkout.id, 'title', e.target.value)}
-                    className="w-full rounded-xl border border-[#1E1E1E] bg-[#141414] px-4 py-3 text-sm font-medium text-white focus:outline-none focus:border-[#B4F000]/50"
+                    className="w-full rounded-xl border border-[#2a2a3a] bg-[#15151f] px-4 py-3 text-sm font-medium text-white focus:outline-none focus:border-[#6c5ce7]/50"
                   />
                 </div>
 
@@ -307,62 +307,62 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
                             handleExerciseDrop(draggedExercise, index);
                           }
                         }}
-                        className={`flex items-start gap-3 rounded-xl border bg-[#141414] p-4 transition-all ${
-                          draggedExercise === exercise.id ? 'border-[#B4F000]/50 opacity-50' : 'border-[#1E1E1E]'
+                        className={`flex items-start gap-3 rounded-xl border bg-[#15151f] p-4 transition-all ${
+                          draggedExercise === exercise.id ? 'border-[#6c5ce7]/50 opacity-50' : 'border-[#2a2a3a]'
                         }`}
                       >
-                        <div className="cursor-grab active:cursor-grabbing pt-1 text-[#444444] hover:text-[#888888] transition-colors">
+                        <div className="cursor-grab active:cursor-grabbing pt-1 text-[#4a4a5a] hover:text-[#a0a0b8] transition-colors">
                           <GripVertical className="h-4 w-4" />
                         </div>
 
-                        <div className="w-8 h-8 rounded-lg bg-[#B4F000] flex items-center justify-center flex-shrink-0">
-                          <span className="text-xs font-bold text-[#0A0A0A]">{index + 1}</span>
+                        <div className="w-8 h-8 rounded-lg bg-[#6c5ce7] flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-bold text-white">{index + 1}</span>
                         </div>
 
                         <div className="flex-1 space-y-2">
                           <input
                             defaultValue={exercise.name}
                             onBlur={(e) => updateExercise(exercise.id, 'name', e.target.value)}
-                            className="w-full bg-transparent text-sm font-semibold text-white focus:outline-none border-b border-transparent focus:border-[#B4F000]"
+                            className="w-full bg-transparent text-sm font-semibold text-white focus:outline-none border-b border-transparent focus:border-[#6c5ce7]"
                           />
                           <div className="flex items-center gap-4">
                             <div>
-                              <label className="block text-[10px] text-[#555555] mb-0.5">Sets</label>
+                              <label className="block text-[10px] text-[#6b6b80] mb-0.5">Sets</label>
                               <input type="number" defaultValue={exercise.sets || ''}
                                 onBlur={(e) => updateExercise(exercise.id, 'sets', e.target.value ? Number(e.target.value) : null)}
-                                className="w-12 bg-[#1A1A1A] rounded px-2 py-1 text-sm font-bold text-white text-center focus:outline-none focus:ring-1 focus:ring-[#B4F000]/50"
+                                className="w-12 bg-[#1f1f2e] rounded px-2 py-1 text-sm font-bold text-white text-center focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-[#555555] mb-0.5">Reps</label>
+                              <label className="block text-[10px] text-[#6b6b80] mb-0.5">Reps</label>
                               <input defaultValue={exercise.reps || ''}
                                 onBlur={(e) => updateExercise(exercise.id, 'reps', e.target.value || null)}
-                                className="w-16 bg-[#1A1A1A] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#B4F000]/50"
+                                className="w-16 bg-[#1f1f2e] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-[#555555] mb-0.5">Rest</label>
+                              <label className="block text-[10px] text-[#6b6b80] mb-0.5">Rest</label>
                               <input type="number" defaultValue={exercise.rest_seconds || ''}
                                 onBlur={(e) => updateExercise(exercise.id, 'rest_seconds', e.target.value ? Number(e.target.value) : null)}
-                                className="w-14 bg-[#1A1A1A] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#B4F000]/50"
+                                className="w-14 bg-[#1f1f2e] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
                                 placeholder="sec"
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-[#555555] mb-0.5">RPE</label>
+                              <label className="block text-[10px] text-[#6b6b80] mb-0.5">RPE</label>
                               <input type="number" min={1} max={10} defaultValue={exercise.rpe || ''}
                                 onBlur={(e) => updateExercise(exercise.id, 'rpe', e.target.value ? Number(e.target.value) : null)}
-                                className="w-12 bg-[#1A1A1A] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#B4F000]/50"
+                                className="w-12 bg-[#1f1f2e] rounded px-2 py-1 text-sm text-white text-center focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
                               />
                             </div>
                           </div>
-                          <p className="text-xs text-[#555555] italic">
+                          <p className="text-xs text-[#6b6b80] italic">
                             {exercise.notes || 'No notes'}
                           </p>
                         </div>
 
                         <button onClick={() => deleteExercise(exercise.id)}
-                          className="text-[#444444] hover:text-[#E24B4A] transition-colors cursor-pointer pt-1">
+                          className="text-[#4a4a5a] hover:text-[#ff5252] transition-colors cursor-pointer pt-1">
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
@@ -370,25 +370,25 @@ export function ProgramEditor({ program, weeks: initialWeeks }: ProgramEditorPro
                 </div>
 
                 <button onClick={() => addExercise(selectedWorkout.id)}
-                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-[#B4F000] hover:text-[#C5F53A] transition-colors cursor-pointer">
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm text-[#6c5ce7] hover:text-[#7c6ff0] transition-colors cursor-pointer">
                   <Plus className="h-4 w-4" /> Add Exercise
                 </button>
 
                 {/* Video / Media */}
                 <div className="mt-8">
-                  <h3 className="text-[10px] text-[#555555] uppercase tracking-[1px] font-medium mb-3">Video / Media</h3>
-                  <div className="rounded-xl border-2 border-dashed border-[#1E1E1E] hover:border-[#B4F000]/30 transition-colors p-8 text-center">
-                    <Upload className="h-8 w-8 text-[#444444] mx-auto mb-3" />
-                    <p className="text-sm text-[#555555] mb-1">Drop video or paste a link</p>
-                    <p className="text-xs text-[#444444]">MP4, YouTube, Vimeo</p>
+                  <h3 className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium mb-3">Video / Media</h3>
+                  <div className="rounded-xl border-2 border-dashed border-[#2a2a3a] hover:border-[#6c5ce7]/30 transition-colors p-8 text-center">
+                    <Upload className="h-8 w-8 text-[#4a4a5a] mx-auto mb-3" />
+                    <p className="text-sm text-[#6b6b80] mb-1">Drop video or paste a link</p>
+                    <p className="text-xs text-[#4a4a5a]">MP4, YouTube, Vimeo</p>
                   </div>
                 </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center py-20">
-                <Dumbbell className="h-12 w-12 text-[#444444] mb-4" />
-                <p className="text-[#888888] mb-1">Select a workout to edit</p>
-                <p className="text-xs text-[#555555]">Choose from the program structure</p>
+                <Dumbbell className="h-12 w-12 text-[#4a4a5a] mb-4" />
+                <p className="text-[#a0a0b8] mb-1">Select a workout to edit</p>
+                <p className="text-xs text-[#6b6b80]">Choose from the program structure</p>
               </div>
             )}
           </div>

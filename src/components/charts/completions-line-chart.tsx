@@ -40,8 +40,8 @@ export function CompletionsLineChart({ data7d, data30d, data90d }: CompletionsLi
             onClick={() => setPeriod(p)}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
               period === p
-                ? 'bg-[#B4F000] text-[#0A0A0A]'
-                : 'border border-[#2A2A2A] text-[#888888] hover:text-white'
+                ? 'bg-[#6c5ce7] text-white'
+                : 'border border-[#2a2a3a] text-[#a0a0b8] hover:text-white'
             }`}
           >
             {p}
@@ -53,23 +53,23 @@ export function CompletionsLineChart({ data7d, data30d, data90d }: CompletionsLi
       <div className="h-[240px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid stroke="#1E1E1E" strokeDasharray="3 3" />
+            <CartesianGrid stroke="#2a2a3a" strokeDasharray="3 3" />
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#555555', fontSize: 11 }}
+              tick={{ fill: '#6b6b80', fontSize: 11 }}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: '#555555', fontSize: 11 }}
+              tick={{ fill: '#6b6b80', fontSize: 11 }}
               width={30}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#141414',
-                border: '1px solid #1E1E1E',
+                backgroundColor: '#15151f',
+                border: '1px solid #2a2a3a',
                 borderRadius: '8px',
                 color: '#FFFFFF',
                 fontSize: '12px',
@@ -78,10 +78,10 @@ export function CompletionsLineChart({ data7d, data30d, data90d }: CompletionsLi
             <Line
               type="monotone"
               dataKey="completions"
-              stroke="#B4F000"
+              stroke="#6c5ce7"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, fill: '#B4F000' }}
+              activeDot={{ r: 4, fill: '#6c5ce7' }}
             />
           </LineChart>
         </ResponsiveContainer>

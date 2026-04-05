@@ -24,7 +24,7 @@ export default async function DashboardLayout({
   if (!profile.onboarding_completed) redirect('/onboarding');
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
+    <div className="min-h-screen bg-[#0a0a0f]">
       {/* Desktop sidebar */}
       <div className="hidden lg:block">
         <Sidebar profile={profile} />

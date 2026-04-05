@@ -80,7 +80,7 @@ export default async function AnalyticsPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-white">Analytics</h1>
-        <p className="text-[#888888] mt-1">
+        <p className="text-[#a0a0b8] mt-1">
           Deep dive into your program performance.
         </p>
       </div>
@@ -88,11 +88,11 @@ export default async function AnalyticsPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         {/* User Retention Curve */}
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
           <h2 className="text-lg font-bold text-white mb-1">
             User retention curve
           </h2>
-          <p className="text-xs text-[#888888] mb-4">
+          <p className="text-xs text-[#a0a0b8] mb-4">
             52% of users complete the full 12-week program
           </p>
 
@@ -109,8 +109,8 @@ export default async function AnalyticsPage() {
                 x2="0"
                 y2="1"
               >
-                <stop offset="0%" stopColor="#B4F000" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#B4F000" stopOpacity="0" />
+                <stop offset="0%" stopColor="#6c5ce7" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#6c5ce7" stopOpacity="0" />
               </linearGradient>
             </defs>
 
@@ -124,14 +124,14 @@ export default async function AnalyticsPage() {
                     y1={y}
                     x2={svgW - padR}
                     y2={y}
-                    stroke="#1E1E1E"
+                    stroke="#2a2a3a"
                     strokeWidth="1"
                   />
                   <text
                     x={padL - 8}
                     y={y + 4}
                     textAnchor="end"
-                    fill="#555555"
+                    fill="#6b6b80"
                     fontSize="10"
                   >
                     {pct}%
@@ -147,7 +147,7 @@ export default async function AnalyticsPage() {
             <polyline
               points={polyline}
               fill="none"
-              stroke="#B4F000"
+              stroke="#6c5ce7"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -160,8 +160,8 @@ export default async function AnalyticsPage() {
                 cx={p.x}
                 cy={p.y}
                 r="3"
-                fill="#0A0A0A"
-                stroke="#B4F000"
+                fill="#0a0a0f"
+                stroke="#6c5ce7"
                 strokeWidth="2"
               />
             ))}
@@ -173,7 +173,7 @@ export default async function AnalyticsPage() {
                 x={p.x}
                 y={svgH - 4}
                 textAnchor="middle"
-                fill="#555555"
+                fill="#6b6b80"
                 fontSize="9"
               >
                 W{p.week}
@@ -183,11 +183,11 @@ export default async function AnalyticsPage() {
         </div>
 
         {/* Peak Training Times */}
-        <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
           <h2 className="text-lg font-bold text-white mb-1">
             Peak training times
           </h2>
-          <p className="text-xs text-[#888888] mb-6">
+          <p className="text-xs text-[#a0a0b8] mb-6">
             Evening sessions (5&ndash;7 PM) are most popular
           </p>
 
@@ -198,16 +198,16 @@ export default async function AnalyticsPage() {
                   <span className="text-sm text-[#CCCCCC]">{slot.label}</span>
                   <span
                     className={`text-sm font-bold ${
-                      slot.highlight ? 'text-[#B4F000]' : 'text-white'
+                      slot.highlight ? 'text-[#6c5ce7]' : 'text-white'
                     }`}
                   >
                     {slot.pct}%
                   </span>
                 </div>
-                <div className="h-3 rounded-full bg-[#1E1E1E] overflow-hidden">
+                <div className="h-3 rounded-full bg-[#2a2a3a] overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all ${
-                      slot.highlight ? 'bg-[#B4F000]' : 'bg-[#7799DD]'
+                      slot.highlight ? 'bg-[#6c5ce7]' : 'bg-[#7799DD]'
                     }`}
                     style={{ width: `${slot.pct}%` }}
                   />
@@ -219,7 +219,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Most Completed Exercises */}
-      <div className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-6">
+      <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
         <h2 className="text-lg font-bold text-white mb-6">
           Most completed exercises
         </h2>
@@ -228,13 +228,13 @@ export default async function AnalyticsPage() {
           {topExercises.map((ex) => (
             <div
               key={ex.rank}
-              className="rounded-xl border border-[#1E1E1E] bg-[#0A0A0A] p-4 flex flex-col items-center text-center"
+              className="rounded-xl border border-[#2a2a3a] bg-[#0a0a0f] p-4 flex flex-col items-center text-center"
             >
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold mb-3 ${
                   ex.rank === 1
-                    ? 'bg-[#B4F000] text-[#0A0A0A]'
-                    : 'bg-[#1E1E1E] text-[#888888]'
+                    ? 'bg-[#6c5ce7] text-white'
+                    : 'bg-[#2a2a3a] text-[#a0a0b8]'
                 }`}
               >
                 #{ex.rank}
@@ -242,10 +242,10 @@ export default async function AnalyticsPage() {
               <p className="text-sm font-semibold text-white mb-1">
                 {ex.name}
               </p>
-              <p className="text-lg font-bold text-[#7ED957]">
+              <p className="text-lg font-bold text-[#00d2ff]">
                 {ex.completions.toLocaleString()}
               </p>
-              <p className="text-[11px] text-[#555555]">completions</p>
+              <p className="text-[11px] text-[#6b6b80]">completions</p>
             </div>
           ))}
         </div>

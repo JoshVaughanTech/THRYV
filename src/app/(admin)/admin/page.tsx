@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
         </div>
         <Link
           href="/admin/management"
-          className="inline-flex items-center gap-1.5 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-4 py-2 text-sm font-bold text-[#0A0A0A] transition-all"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-accent-primary hover:bg-accent-primary-hover px-4 py-2 text-sm font-bold text-white transition-all"
         >
           Management Tools
         </Link>
@@ -121,7 +121,7 @@ export default async function AdminDashboardPage() {
 
         <Card className="flex items-start gap-4">
           <div className="w-10 h-10 rounded-lg momentum-gradient flex items-center justify-center flex-shrink-0">
-            <DollarSign className="h-5 w-5 text-[#0A0A0A]" />
+            <DollarSign className="h-5 w-5 text-white" />
           </div>
           <div>
             <p className="text-sm text-text-muted">Total Program Activations</p>
