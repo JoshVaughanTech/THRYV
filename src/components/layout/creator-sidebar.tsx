@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
 import {
-  Star,
+  Zap,
   LayoutGrid,
   FileText,
   Users,
@@ -55,7 +55,7 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
       {/* Logo + Badge */}
       <div className="px-6 py-6">
         <div className="flex items-center gap-3">
-          <Star className="h-5 w-5 text-[#B4F000] fill-[#B4F000]" />
+          <Zap className="h-5 w-5 text-[#B4F000]" />
           <span className="text-lg font-bold text-white tracking-[2px]">THRYV</span>
           <span className="ml-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-[1px] bg-[#B4F000] text-[#0A0A0A]">
             Creator

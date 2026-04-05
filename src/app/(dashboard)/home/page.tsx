@@ -1,16 +1,17 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
+  Zap,
+  Search,
+  Bell,
   Flame,
   TrendingUp,
   Coins,
-  Calendar,
-  ChevronRight,
-  Zap,
+  Dumbbell,
+  Clock,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { CoachCardCarousel } from '@/components/ui/coach-card-carousel';
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -22,11 +23,22 @@ export default async function HomePage() {
     { data: subscription },
     { data: activations },
     { data: streak },
+    { data: coaches },
   ] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
-    supabase.from('program_activations').select('*, programs(*)').eq('user_id', user.id).eq('is_active', true),
+    supabase
+      .from('program_activations')
+      .select('*, programs(*)')
+      .eq('user_id', user.id)
+      .eq('is_active', true),
     supabase.from('streaks').select('*').eq('user_id', user.id).single(),
+    supabase
+      .from('profiles')
+      .select('id, full_name, avatar_url, bio, specialties, follower_count, program_count, session_count, tier')
+      .in('role', ['coach', 'admin'])
+      .order('follower_count', { ascending: false })
+      .limit(10),
   ]);
 
   // Get credit balance
@@ -39,119 +51,136 @@ export default async function HomePage() {
     p_user_id: user.id,
   });
 
-  const momentumLevel = Math.floor((momentum || 0) / 100) + 1;
+  const filterPills = ['ALL', 'STRENGTH', 'HYBRID', 'CARDIO', 'HIIT'];
+
+  // Build trending programs from active programs data, or show placeholder items
+  const trendingPrograms = activations && activations.length > 0
+    ? activations.slice(0, 3).map((a: any) => ({
+        id: a.id,
+        title: a.programs?.title || 'Program',
+        duration: a.programs?.duration_weeks
+          ? `${a.programs.duration_weeks} wks`
+          : '—',
+      }))
+    : [
+        { id: '1', title: 'Shred 30', duration: '4 wks' },
+        { id: '2', title: 'Power Build', duration: '8 wks' },
+        { id: '3', title: 'HIIT Blitz', duration: '6 wks' },
+      ];
 
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">
-          Welcome back{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}
-        </h1>
-        <p className="text-text-secondary mt-1">Here&apos;s your training overview</p>
+    <div className="min-h-screen bg-[#0A0A0A] text-white">
+      {/* ── Header ── */}
+      <header className="flex items-center justify-between px-5 pt-6 pb-4">
+        <div className="flex items-center gap-2">
+          <Zap className="h-6 w-6 text-[#B4F000]" />
+          <span className="text-lg font-bold tracking-wide text-white">
+            THRYV
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#2A2A2A]">
+            <Search className="h-4 w-4 text-[#888888]" />
+          </button>
+          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#2A2A2A]">
+            <Bell className="h-4 w-4 text-[#888888]" />
+          </button>
+        </div>
+      </header>
+
+      {/* ── Stats Badges ── */}
+      <div className="flex items-center gap-3 overflow-x-auto px-5 pb-4 scrollbar-none">
+        <div className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[#1E1E1E] bg-[#141414] px-3 py-1.5">
+          <TrendingUp className="h-3.5 w-3.5 text-[#B4F000]" />
+          <span className="text-xs font-semibold text-white">
+            {momentum || 0}
+          </span>
+          <span className="text-[10px] text-[#555555]">MOM</span>
+        </div>
+        <div className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[#1E1E1E] bg-[#141414] px-3 py-1.5">
+          <Flame className="h-3.5 w-3.5 text-orange-500" />
+          <span className="text-xs font-semibold text-white">
+            {streak?.current_streak || 0}
+          </span>
+          <span className="text-[10px] text-[#555555]">DAY</span>
+        </div>
+        <div className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[#1E1E1E] bg-[#141414] px-3 py-1.5">
+          <Coins className="h-3.5 w-3.5 text-yellow-500" />
+          <span className="text-xs font-semibold text-white">
+            {creditBalance ?? 0}
+          </span>
+          <span className="text-[10px] text-[#555555]">CR</span>
+        </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg momentum-gradient flex items-center justify-center flex-shrink-0">
-            <TrendingUp className="h-5 w-5 text-[#0A0A0A]" />
-          </div>
-          <div>
-            <p className="text-sm text-text-muted">Momentum</p>
-            <p className="text-xl font-bold text-text-primary">{momentum || 0}</p>
-            <p className="text-xs text-accent-primary">Level {momentumLevel}</p>
-          </div>
-        </Card>
-
-        <Card className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
-            <Flame className="h-5 w-5 text-success" />
-          </div>
-          <div>
-            <p className="text-sm text-text-muted">Current Streak</p>
-            <p className="text-xl font-bold text-text-primary">{streak?.current_streak || 0} days</p>
-            <p className="text-xs text-text-muted">Best: {streak?.longest_streak || 0}</p>
-          </div>
-        </Card>
-
-        <Card className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-accent-secondary/10 flex items-center justify-center flex-shrink-0">
-            <Coins className="h-5 w-5 text-accent-secondary" />
-          </div>
-          <div>
-            <p className="text-sm text-text-muted">Credits</p>
-            <p className="text-xl font-bold text-text-primary">{creditBalance ?? 0}</p>
-            <p className="text-xs text-text-muted">Available</p>
-          </div>
-        </Card>
-
-        <Card className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center flex-shrink-0">
-            <Calendar className="h-5 w-5 text-warning" />
-          </div>
-          <div>
-            <p className="text-sm text-text-muted">Subscription</p>
-            <p className="text-xl font-bold text-text-primary capitalize">
-              {subscription?.status || 'None'}
-            </p>
-            {subscription?.status === 'trial' && subscription.trial_end && (
-              <p className="text-xs text-warning">
-                Ends {new Date(subscription.trial_end).toLocaleDateString()}
-              </p>
-            )}
-          </div>
-        </Card>
+      {/* ── Tabs ── */}
+      <div className="flex gap-6 border-b border-[#1E1E1E] px-5">
+        <button className="relative pb-3 text-sm font-bold tracking-widest text-white">
+          MARKETPLACE
+          <span className="absolute bottom-0 left-0 h-[2px] w-full bg-[#B4F000]" />
+        </button>
+        <Link
+          href="/programs"
+          className="pb-3 text-sm font-bold tracking-widest text-[#555555] hover:text-[#888888] transition-colors"
+        >
+          PROGRAMS
+        </Link>
       </div>
 
-      {/* Active Programs */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-text-primary">Active Programs</h2>
+      {/* ── Filter Pills ── */}
+      <div className="flex gap-2 overflow-x-auto px-5 py-4 scrollbar-none">
+        {filterPills.map((pill, i) => (
+          <span
+            key={pill}
+            className={
+              i === 0
+                ? 'flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold bg-[#B4F000] text-[#0A0A0A]'
+                : 'flex-shrink-0 rounded-full border border-[#2A2A2A] px-4 py-1.5 text-xs font-semibold text-[#888888]'
+            }
+          >
+            {pill}
+          </span>
+        ))}
+      </div>
+
+      {/* ── Coach Carousel ── */}
+      <section className="px-5 pb-6">
+        <CoachCardCarousel coaches={coaches || []} />
+      </section>
+
+      {/* ── Trending Programs ── */}
+      <section className="px-5 pb-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Trending Programs</h2>
           <Link
             href="/programs"
-            className="inline-flex items-center gap-1 text-sm text-accent-primary hover:text-accent-primary-hover transition-colors"
+            className="text-xs font-medium text-[#B4F000] hover:underline"
           >
-            Browse Programs
-            <ChevronRight className="h-4 w-4" />
+            See all
           </Link>
         </div>
 
-        {activations && activations.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activations.map((activation: any) => (
-              <Card key={activation.id} hover>
-                <Link href={`/my-programs`} className="block">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="font-semibold text-text-primary">
-                      {activation.programs?.title || 'Program'}
-                    </h3>
-                    <Badge variant="success">Active</Badge>
-                  </div>
-                  <p className="text-sm text-text-muted">
-                    Week {activation.current_week} of {activation.programs?.duration_weeks || '?'}
-                  </p>
-                </Link>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="text-center py-12">
-            <Zap className="h-8 w-8 text-text-muted mx-auto mb-3" />
-            <p className="text-text-secondary mb-1">No active programs yet</p>
-            <p className="text-sm text-text-muted mb-4">
-              Browse our library and activate your first program
-            </p>
+        <div className="grid grid-cols-3 gap-3">
+          {trendingPrograms.map((program: any) => (
             <Link
+              key={program.id}
               href="/programs"
-              className="inline-flex items-center gap-1.5 text-sm text-accent-primary hover:text-accent-primary-hover transition-colors"
+              className="rounded-2xl border border-[#1E1E1E] bg-[#141414] p-4 text-center transition-colors hover:border-[#2A2A2A]"
             >
-              Discover Programs
-              <ChevronRight className="h-4 w-4" />
+              <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#B4F000]/10">
+                <Dumbbell className="h-5 w-5 text-[#B4F000]" />
+              </div>
+              <p className="text-xs font-semibold text-white truncate">
+                {program.title}
+              </p>
+              <div className="mt-1 flex items-center justify-center gap-1 text-[#555555]">
+                <Clock className="h-3 w-3" />
+                <span className="text-[10px]">{program.duration}</span>
+              </div>
             </Link>
-          </Card>
-        )}
-      </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

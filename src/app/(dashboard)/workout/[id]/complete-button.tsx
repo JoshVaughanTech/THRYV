@@ -2,9 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Timer } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Check, Zap } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface CompleteWorkoutButtonProps {
@@ -12,6 +10,8 @@ interface CompleteWorkoutButtonProps {
   programId: string;
   creatorId: string;
   isCompleted: boolean;
+  exerciseCount: number;
+  momentumReward: number;
 }
 
 export function CompleteWorkoutButton({
@@ -19,25 +19,25 @@ export function CompleteWorkoutButton({
   programId,
   creatorId,
   isCompleted,
+  exerciseCount,
+  momentumReward,
 }: CompleteWorkoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [started, setStarted] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [checked, setChecked] = useState<Record<number, boolean>>({});
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const supabase = createClient();
+
+  const checkedCount = Object.values(checked).filter(Boolean).length;
+  const allDone = checkedCount >= exerciseCount;
 
   function startTimer() {
     setStarted(true);
     intervalRef.current = setInterval(() => {
       setElapsed((prev) => prev + 1);
     }, 1000);
-  }
-
-  function formatTime(seconds: number) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 
   async function handleComplete() {
@@ -47,7 +47,6 @@ export function CompleteWorkoutButton({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Log workout session
     await supabase.from('workout_sessions').insert({
       user_id: user.id,
       workout_id: workoutId,
@@ -55,15 +54,13 @@ export function CompleteWorkoutButton({
       duration_seconds: elapsed > 0 ? elapsed : null,
     });
 
-    // Award momentum points
     await supabase.from('momentum_events').insert({
       user_id: user.id,
       event_type: 'workout_completion',
-      points: 10,
+      points: momentumReward,
       reference_id: workoutId,
     });
 
-    // Log usage events
     await supabase.from('usage_events').insert([
       {
         user_id: user.id,
@@ -73,19 +70,16 @@ export function CompleteWorkoutButton({
         value: 1,
       },
       ...(elapsed > 0
-        ? [
-            {
-              user_id: user.id,
-              program_id: programId,
-              creator_id: creatorId,
-              event_type: 'time_spent' as const,
-              value: elapsed,
-            },
-          ]
+        ? [{
+            user_id: user.id,
+            program_id: programId,
+            creator_id: creatorId,
+            event_type: 'time_spent' as const,
+            value: elapsed,
+          }]
         : []),
     ]);
 
-    // Update streak
     const today = new Date().toISOString().split('T')[0];
     const { data: streak } = await supabase
       .from('streaks')
@@ -96,26 +90,17 @@ export function CompleteWorkoutButton({
     if (streak) {
       const lastDate = streak.last_workout_date;
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
       let newStreak = streak.current_streak;
-      if (lastDate === yesterday) {
-        newStreak += 1;
-      } else if (lastDate !== today) {
-        newStreak = 1;
-      }
-
+      if (lastDate === yesterday) newStreak += 1;
+      else if (lastDate !== today) newStreak = 1;
       const longestStreak = Math.max(newStreak, streak.longest_streak);
 
-      await supabase
-        .from('streaks')
-        .update({
-          current_streak: newStreak,
-          longest_streak: longestStreak,
-          last_workout_date: today,
-        })
-        .eq('user_id', user.id);
+      await supabase.from('streaks').update({
+        current_streak: newStreak,
+        longest_streak: longestStreak,
+        last_workout_date: today,
+      }).eq('user_id', user.id);
 
-      // Streak bonus momentum
       if (newStreak > 0 && newStreak % 7 === 0) {
         await supabase.from('momentum_events').insert({
           user_id: user.id,
@@ -130,39 +115,33 @@ export function CompleteWorkoutButton({
 
   if (isCompleted) {
     return (
-      <Card className="text-center py-6 border-success/20 bg-success/5">
-        <Check className="h-8 w-8 text-success mx-auto mb-2" />
-        <p className="font-semibold text-success">Workout Complete!</p>
-        <p className="text-sm text-text-muted mt-1">+10 Momentum earned</p>
-      </Card>
-    );
-  }
-
-  if (!started) {
-    return (
-      <div className="space-y-3">
-        <Button onClick={startTimer} size="lg" className="w-full gap-2">
-          <Timer className="h-5 w-5" />
-          Start Workout
-        </Button>
-        <Button onClick={handleComplete} variant="secondary" size="lg" className="w-full gap-2">
-          <Check className="h-5 w-5" />
-          Mark Complete (no timer)
-        </Button>
+      <div className="bg-[#B4F000] rounded-[14px] py-[15px] text-center">
+        <div className="flex items-center justify-center gap-2">
+          <Check className="h-5 w-5 text-[#0A0A0A]" strokeWidth={3} />
+          <span className="text-[#0A0A0A] text-[14px] font-bold tracking-[0.5px]">
+            COMPLETE  +{momentumReward}
+          </span>
+        </div>
       </div>
     );
   }
 
   return (
-    <Card glow className="text-center py-8">
-      <Timer className="h-8 w-8 text-accent-primary mx-auto mb-3" />
-      <p className="text-3xl font-bold text-text-primary font-mono mb-4">
-        {formatTime(elapsed)}
-      </p>
-      <Button onClick={handleComplete} loading={loading} size="lg" className="gap-2">
-        <Check className="h-5 w-5" />
-        Complete Workout
-      </Button>
-    </Card>
+    <button
+      onClick={started ? handleComplete : startTimer}
+      disabled={loading}
+      className="w-full py-[15px] rounded-[14px] text-[14px] font-bold tracking-[0.5px] transition-all cursor-pointer disabled:opacity-50"
+      style={{
+        background: allDone || started ? '#B4F000' : '#333333',
+        color: allDone || started ? '#0A0A0A' : '#666666',
+      }}
+    >
+      {loading
+        ? 'Saving...'
+        : started
+          ? `COMPLETE WORKOUT  +${momentumReward}`
+          : 'START WORKOUT'
+      }
+    </button>
   );
 }
