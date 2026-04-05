@@ -18,7 +18,7 @@ export default async function BuilderPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   const { data: programs } = await supabase
     .from('programs')

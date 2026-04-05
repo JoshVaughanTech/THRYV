@@ -19,7 +19,7 @@ export default async function CreatorSettingsPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   const fullName = profile?.full_name || 'Creator';
   const initials = fullName

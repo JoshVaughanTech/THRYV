@@ -46,7 +46,7 @@ export default async function AnalyticsPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   // Build SVG retention curve
   const svgW = 560;

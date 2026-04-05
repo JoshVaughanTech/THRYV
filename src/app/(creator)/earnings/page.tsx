@@ -22,7 +22,7 @@ export default async function CreatorEarningsPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   // Fetch programs, current-month usage events, and payout data in parallel
   const now = new Date();

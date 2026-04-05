@@ -31,7 +31,7 @@ export default async function CreatorDashboardPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   const [
     { count: totalActivations },

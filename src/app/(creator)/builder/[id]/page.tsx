@@ -16,7 +16,7 @@ export default async function ProgramEditorPage(props: {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   const { data: program } = await supabase
     .from('programs')

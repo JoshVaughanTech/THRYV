@@ -13,7 +13,7 @@ export default async function CreatorCommunityPage() {
     .eq('user_id', user.id)
     .single();
 
-  if (!creator) redirect('/creator-onboarding');
+  if (!creator) redirect('/creator-signup');
 
   // Get creator's programs for filter pills
   const { data: programs } = await supabase

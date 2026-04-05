@@ -202,7 +202,7 @@ export default function LandingPage() {
             Your expertise deserves a platform built for performance.
           </p>
           <Link
-            href="/signup"
+            href="/creator-signup"
             className="inline-flex items-center gap-2 rounded-lg border border-accent-secondary/30 bg-accent-secondary/10 hover:bg-accent-secondary/20 px-6 py-3 text-sm font-medium text-accent-secondary transition-all"
           >
             Apply as a Creator
