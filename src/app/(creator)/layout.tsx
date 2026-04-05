@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { Sidebar } from '@/components/layout/sidebar';
+import { CreatorSidebar } from '@/components/layout/creator-sidebar';
 
 export default async function CreatorLayout({
   children,
@@ -22,10 +22,10 @@ export default async function CreatorLayout({
   if (profile.role !== 'creator' && profile.role !== 'admin') redirect('/home');
 
   return (
-    <div className="min-h-screen bg-bg-primary">
-      <Sidebar profile={profile} />
-      <main className="pl-64">
-        <div className="mx-auto max-w-6xl px-8 py-8">{children}</div>
+    <div className="min-h-screen bg-[#0A0A0A]">
+      <CreatorSidebar profile={profile} />
+      <main className="pl-[260px]">
+        <div className="px-8 py-8 animate-fade-in">{children}</div>
       </main>
     </div>
   );
