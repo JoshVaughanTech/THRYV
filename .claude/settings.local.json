@@ -10,7 +10,9 @@
       "Bash(gh auth:*)",
       "Bash(find . -name '*.tsx' -exec sed -i -e 's/#B4F000/#6c5ce7/g' -e 's/#C5F53A/#7c6ff0/g' -e 's/#7ED957/#00d2ff/g' -e 's/#0A0A0A/#0a0a0f/g' -e 's/#0a0a0a/#0a0a0f/g' -e 's/#141414/#15151f/g' -e 's/#1E1E1E/#2a2a3a/g' -e 's/#1A1A1A/#1f1f2e/g' -e 's/#1a1a1a/#1f1f2e/g' -e 's/#F0A000/#ffab00/g' -e 's/#E24B4A/#ff5252/g' -e 's/#888888/#a0a0b8/g' -e 's/#555555/#6b6b80/g' -e 's/#444444/#4a4a5a/g' -e 's/#333333/#2a2a3a/g' -e 's/#999999/#a0a0b8/g' -e 's/#2A2A2A/#2a2a3a/g' '{}' +)",
       "Bash(find . -name \"*.tsx\" -exec sed -i 's/text-\\\\[#0a0a0f\\\\]/text-white/g' {} +)",
-      "Bash(find . -name \"*.tsx\" -exec sed -i \"s|redirect\\('/creator-onboarding'\\)|redirect\\('/creator-signup'\\)|g\" {} +)"
+      "Bash(find . -name \"*.tsx\" -exec sed -i \"s|redirect\\('/creator-onboarding'\\)|redirect\\('/creator-signup'\\)|g\" {} +)",
+      "Bash(xargs grep:*)",
+      "Bash(wc -l /c/Users/Joshua.Vaughan/Desktop/thryv-mobile/app/workout/[id].tsx)"
     ]
   }
 }
