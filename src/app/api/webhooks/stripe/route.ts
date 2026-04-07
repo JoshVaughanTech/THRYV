@@ -5,6 +5,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import Stripe from 'stripe';
 
 export async function POST(request: Request) {
+  if (!stripe) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 });
+  }
+
   const body = await request.text();
   const headersList = await headers();
   const sig = headersList.get('stripe-signature');
