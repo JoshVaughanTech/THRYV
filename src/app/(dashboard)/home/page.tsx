@@ -3,7 +3,6 @@ import Link from 'next/link';
 import {
   Zap,
   Search,
-  Bell,
   Flame,
   TrendingUp,
   Coins,
@@ -12,6 +11,7 @@ import {
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { CoachCardCarousel } from '@/components/ui/coach-card-carousel';
+import { NotificationBell } from '@/components/ui/notification-bell';
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -82,9 +82,7 @@ export default async function HomePage() {
           <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#2a2a3a]">
             <Search className="h-4 w-4 text-[#a0a0b8]" />
           </button>
-          <button className="flex h-10 w-10 items-center justify-center rounded-full border border-[#2a2a3a]">
-            <Bell className="h-4 w-4 text-[#a0a0b8]" />
-          </button>
+          <NotificationBell userId={user.id} />
         </div>
       </header>
 

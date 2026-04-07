@@ -5,6 +5,15 @@ export type CreditEventType = 'monthly_grant' | 'trial_grant' | 'program_activat
 export type UsageEventType = 'program_activation' | 'workout_completion' | 'time_spent' | 'community_engagement';
 export type MomentumEventType = 'workout_completion' | 'streak_bonus' | 'weekly_consistency' | 'program_completion';
 export type PayoutStatus = 'pending' | 'locked';
+export type NotificationType =
+  | 'workout_complete'
+  | 'streak_milestone'
+  | 'level_up'
+  | 'program_activated'
+  | 'credit_received'
+  | 'new_follower'
+  | 'community_reply'
+  | 'community_like';
 
 export interface Profile {
   id: string;
@@ -198,5 +207,16 @@ export interface PayoutResult {
   weighted_score: number;
   share_pct: number;
   earnings: number;
+  created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  data: Record<string, unknown> | null;
+  read: boolean;
   created_at: string;
 }

@@ -264,15 +264,159 @@ export function WorkoutTracker({
     // Update streak
     const today = new Date().toISOString().split('T')[0];
     const { data: streakData } = await supabase.from('streaks').select('*').eq('user_id', user.id).single();
+    let newStreak = 0;
     if (streakData) {
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-      let newStreak = streakData.current_streak;
+      newStreak = streakData.current_streak;
       if (streakData.last_workout_date === yesterday) newStreak += 1;
       else if (streakData.last_workout_date !== today) newStreak = 1;
       await supabase.from('streaks').update({
         current_streak: newStreak, longest_streak: Math.max(newStreak, streakData.longest_streak), last_workout_date: today,
       }).eq('user_id', user.id);
       setStreak(newStreak);
+    }
+
+    // Get the session we just inserted so we have the session_id
+    const { data: newSession } = await supabase
+      .from('workout_sessions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('workout_id', workoutId)
+      .order('completed_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    const sessionId = newSession?.id;
+
+    // ── Save set logs ──
+    if (sessionId) {
+      const setLogRows: {
+        session_id: string;
+        exercise_id: string;
+        set_number: number;
+        weight: number | null;
+        reps: number | null;
+        rpe: number | null;
+        completed: boolean;
+      }[] = [];
+
+      exercises.forEach((ex, exIdx) => {
+        const state = exerciseStates[exIdx];
+        state.sets.forEach((set, setIdx) => {
+          setLogRows.push({
+            session_id: sessionId,
+            exercise_id: ex.id,
+            set_number: setIdx + 1,
+            weight: set.weight ? parseFloat(set.weight) : null,
+            reps: set.reps ? parseInt(set.reps, 10) : null,
+            rpe: set.rpe ? parseFloat(set.rpe) : null,
+            completed: set.done,
+          });
+        });
+      });
+
+      if (setLogRows.length > 0) {
+        await supabase.from('set_logs').insert(setLogRows);
+      }
+
+      // ── Check for new PRs ──
+      const newPRs: string[] = [];
+
+      for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+        const ex = exercises[exIdx];
+        const state = exerciseStates[exIdx];
+        const doneSets = state.sets.filter((s) => s.done && s.weight && s.reps);
+
+        if (doneSets.length === 0) continue;
+
+        // Find the best set by estimated 1RM (Epley formula: weight * (1 + reps / 30))
+        let bestWeight = 0;
+        let bestReps = 0;
+        let bestE1rm = 0;
+
+        for (const set of doneSets) {
+          const w = parseFloat(set.weight) || 0;
+          const r = parseInt(set.reps, 10) || 0;
+          if (w <= 0 || r <= 0) continue;
+          const e1rm = r === 1 ? w : w * (1 + r / 30);
+          if (e1rm > bestE1rm) {
+            bestE1rm = e1rm;
+            bestWeight = w;
+            bestReps = r;
+          }
+        }
+
+        if (bestE1rm <= 0) continue;
+
+        // Check existing PR for this exercise_name
+        const { data: existingPR } = await supabase
+          .from('personal_records')
+          .select('id, estimated_1rm')
+          .eq('user_id', user.id)
+          .eq('exercise_name', ex.name)
+          .order('estimated_1rm', { ascending: false })
+          .limit(1)
+          .single();
+
+        const existingE1rm = existingPR ? Number(existingPR.estimated_1rm) || 0 : 0;
+
+        if (bestE1rm > existingE1rm) {
+          await supabase.from('personal_records').insert({
+            user_id: user.id,
+            exercise_name: ex.name,
+            weight: bestWeight,
+            reps: bestReps,
+            estimated_1rm: Math.round(bestE1rm * 10) / 10,
+            achieved_at: new Date().toISOString(),
+            session_id: sessionId,
+          });
+          newPRs.push(ex.name);
+        }
+      }
+
+      // ── Create notifications ──
+      const notifications: {
+        user_id: string;
+        type: string;
+        title: string;
+        body: string | null;
+        data: Record<string, unknown>;
+      }[] = [];
+
+      // Workout completion notification
+      notifications.push({
+        user_id: user.id,
+        type: 'workout_complete',
+        title: 'Workout Complete!',
+        body: `You finished ${workoutTitle} from ${programTitle}.`,
+        data: { workout_id: workoutId, session_id: sessionId },
+      });
+
+      // PR notifications
+      for (const prName of newPRs) {
+        notifications.push({
+          user_id: user.id,
+          type: 'workout_complete',
+          title: `New PR: ${prName}`,
+          body: `You set a new personal record on ${prName}!`,
+          data: { exercise_name: prName, session_id: sessionId },
+        });
+      }
+
+      // Streak milestone notification (every 7 days)
+      if (newStreak > 0 && newStreak % 7 === 0) {
+        notifications.push({
+          user_id: user.id,
+          type: 'streak_milestone',
+          title: `${newStreak}-Day Streak!`,
+          body: `You've worked out ${newStreak} days in a row. Keep it up!`,
+          data: { streak: newStreak },
+        });
+      }
+
+      if (notifications.length > 0) {
+        await supabase.from('notifications').insert(notifications);
+      }
     }
 
     setSaving(false);

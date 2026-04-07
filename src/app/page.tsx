@@ -225,10 +225,10 @@ export default function LandingPage() {
             <span className="font-bold text-text-primary">THRYV</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-text-muted">
-            <Link href="#" className="hover:text-text-secondary transition-colors">
+            <Link href="/terms" className="hover:text-text-secondary transition-colors">
               Terms
             </Link>
-            <Link href="#" className="hover:text-text-secondary transition-colors">
+            <Link href="/privacy" className="hover:text-text-secondary transition-colors">
               Privacy
             </Link>
             <span>&copy; {new Date().getFullYear()} THRYV</span>
