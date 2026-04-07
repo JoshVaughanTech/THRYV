@@ -417,6 +417,90 @@ export function WorkoutTracker({
       if (notifications.length > 0) {
         await supabase.from('notifications').insert(notifications);
       }
+
+      // ── Week advancement / Program completion ──
+      if (programId && weekNumber) {
+        // Get current program activation
+        const { data: activation } = await supabase
+          .from('program_activations')
+          .select('id, current_week, program_id, programs(title, duration_weeks)')
+          .eq('user_id', user.id)
+          .eq('program_id', programId)
+          .eq('is_active', true)
+          .single();
+
+        if (activation) {
+          // Get the current week record to find all workouts in this week
+          const { data: currentWeek } = await supabase
+            .from('program_weeks')
+            .select('id, workouts(id)')
+            .eq('program_id', programId)
+            .eq('week_number', weekNumber)
+            .single();
+
+          if (currentWeek?.workouts) {
+            const weekWorkoutIds = currentWeek.workouts.map((w: any) => w.id);
+
+            // Count completed sessions for workouts in this week
+            const { count: completedCount } = await supabase
+              .from('workout_sessions')
+              .select('id', { count: 'exact', head: true })
+              .eq('user_id', user.id)
+              .in('workout_id', weekWorkoutIds);
+
+            const allWeekWorkoutsDone = (completedCount || 0) >= weekWorkoutIds.length;
+
+            if (allWeekWorkoutsDone) {
+              // Check if a next week exists
+              const { data: nextWeek } = await supabase
+                .from('program_weeks')
+                .select('id, week_number')
+                .eq('program_id', programId)
+                .eq('week_number', weekNumber + 1)
+                .single();
+
+              if (nextWeek) {
+                // Advance to next week
+                await supabase
+                  .from('program_activations')
+                  .update({ current_week: weekNumber + 1 })
+                  .eq('id', activation.id);
+
+                await supabase.from('notifications').insert({
+                  user_id: user.id,
+                  type: 'level_up',
+                  title: `Week ${weekNumber} complete!`,
+                  body: `Moving to Week ${weekNumber + 1}. Keep pushing!`,
+                  data: { program_id: programId, from_week: weekNumber, to_week: weekNumber + 1 },
+                });
+              } else {
+                // No more weeks — program complete
+                const progTitle = (activation as any).programs?.title || programTitle;
+
+                await supabase
+                  .from('program_activations')
+                  .update({ is_active: false, completed_at: new Date().toISOString() })
+                  .eq('id', activation.id);
+
+                await supabase.from('momentum_events').insert({
+                  user_id: user.id,
+                  event_type: 'program_completion',
+                  points: 50,
+                  reference_id: programId,
+                });
+
+                await supabase.from('notifications').insert({
+                  user_id: user.id,
+                  type: 'level_up',
+                  title: 'Program Complete!',
+                  body: `You completed ${progTitle}! +50 Momentum earned.`,
+                  data: { program_id: programId, completed: true },
+                });
+              }
+            }
+          }
+        }
+      }
     }
 
     setSaving(false);

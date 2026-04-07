@@ -64,13 +64,14 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 space-y-1">
+      <nav role="navigation" aria-label="Creator navigation" className="flex-1 px-4 space-y-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           return (
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? 'page' : undefined}
               className={clsx(
                 'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
                 isActive

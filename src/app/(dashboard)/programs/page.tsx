@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CoachCardCarousel } from '@/components/ui/coach-card-carousel';
 import { ProgramFilters } from './filters';
 
 export default async function ProgramsPage(props: {
-  searchParams: Promise<{ goal?: string; level?: string; equipment?: string; q?: string }>;
+  searchParams: Promise<{ goal?: string; level?: string; equipment?: string; q?: string; sort?: string }>;
 }) {
   const searchParams = await props.searchParams;
   const supabase = await createClient();
@@ -44,8 +44,7 @@ export default async function ProgramsPage(props: {
   let query = supabase
     .from('programs')
     .select('*, creators(*, profiles:user_id(full_name, avatar_url))')
-    .eq('status', 'published')
-    .order('created_at', { ascending: false });
+    .eq('status', 'published');
 
   if (searchParams.goal) {
     query = query.eq('goal', searchParams.goal);
@@ -55,6 +54,21 @@ export default async function ProgramsPage(props: {
   }
   if (searchParams.q) {
     query = query.ilike('title', `%${searchParams.q}%`);
+  }
+  if (searchParams.equipment) {
+    query = query.contains('equipment', [searchParams.equipment]);
+  }
+
+  // Apply sorting
+  const sort = searchParams.sort || 'newest';
+  if (sort === 'popular') {
+    // Order by created_at desc as a proxy for popularity until we add an activation_count column
+    query = query.order('created_at', { ascending: false });
+  } else if (sort === 'shortest') {
+    query = query.order('duration_weeks', { ascending: true });
+  } else {
+    // Default: newest first
+    query = query.order('created_at', { ascending: false });
   }
 
   const { data: programs } = await query;

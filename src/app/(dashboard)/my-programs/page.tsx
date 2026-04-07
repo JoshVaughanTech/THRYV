@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { Zap, Clock, ChevronRight, Check } from 'lucide-react';
+import { Zap, Clock, ChevronRight, Check, Trophy } from 'lucide-react';
 
 const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -90,6 +90,20 @@ export default async function MyProgramsPage() {
 
   // Completed workouts
   const completed = weeklyWorkouts.filter((w) => completedWorkoutIds.has(w.id));
+
+  // Completed programs (not just workouts — full program completions)
+  const completedPrograms = activations?.filter((a: any) => !a.is_active && a.completed_at) || [];
+
+  // Fetch momentum earned per completed program
+  const completedProgramMomentum: Record<string, number> = {};
+  for (const cp of completedPrograms) {
+    const { data: momentumData } = await supabase
+      .from('momentum_events')
+      .select('points')
+      .eq('user_id', user.id)
+      .eq('reference_id', cp.program_id);
+    completedProgramMomentum[cp.program_id] = (momentumData || []).reduce((sum: number, e: any) => sum + (e.points || 0), 0);
+  }
 
   const todayLabel = now.toLocaleDateString('en-US', { weekday: 'long' });
 
@@ -239,6 +253,51 @@ export default async function MyProgramsPage() {
                 </div>
               </div>
             ))}
+          </>
+        )}
+
+        {/* Completed Programs */}
+        {completedPrograms.length > 0 && (
+          <>
+            <div className="text-[#2a2a3a] text-[10px] uppercase tracking-[1px] font-semibold pt-5 pb-1">
+              Completed Programs
+            </div>
+            {completedPrograms.map((cp: any) => {
+              const progTitle = cp.programs?.title || 'Program';
+              const completedDate = cp.completed_at
+                ? new Date(cp.completed_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })
+                : null;
+              const totalMomentum = completedProgramMomentum[cp.program_id] || 0;
+
+              return (
+                <div key={cp.id} className="bg-[#15151f] rounded-[14px] p-4 border border-[#2a2a3a] mb-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-[36px] h-[36px] rounded-full bg-[#6c5ce7]/15 border border-[#6c5ce7]/25 flex items-center justify-center flex-shrink-0">
+                      <Trophy className="h-4 w-4 text-[#6c5ce7]" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[#f0f0f5] text-[13px] font-semibold">{progTitle}</div>
+                      {completedDate && (
+                        <div className="text-[#6b6b80] text-[10px]">Completed on {completedDate}</div>
+                      )}
+                    </div>
+                    {totalMomentum > 0 && (
+                      <div className="text-right flex-shrink-0">
+                        <div className="flex items-center gap-1 text-[#6c5ce7]">
+                          <Zap className="h-3 w-3" />
+                          <span className="text-[12px] font-bold">{totalMomentum.toLocaleString()}</span>
+                        </div>
+                        <div className="text-[#6b6b80] text-[8px]">MOMENTUM</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </>
         )}
 

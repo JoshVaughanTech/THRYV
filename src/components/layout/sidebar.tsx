@@ -60,40 +60,21 @@ export function Sidebar({ profile }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav role="navigation" aria-label="Main navigation" className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <div className="mb-4">
           <p className="px-3 text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
             Training
           </p>
-          {userNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={clsx(
-                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-                pathname === item.href || pathname.startsWith(item.href + '/')
-                  ? 'bg-accent-primary/10 text-accent-primary'
-                  : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
-              )}
-            >
-              <item.icon className="h-4.5 w-4.5" />
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
-        {(profile.role === 'creator' || profile.role === 'admin') && (
-          <div className="mb-4">
-            <p className="px-3 text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
-              Creator
-            </p>
-            {creatorNav.map((item) => (
+          {userNav.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? 'page' : undefined}
                 className={clsx(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-                  pathname === item.href || pathname.startsWith(item.href + '/')
+                  isActive
                     ? 'bg-accent-primary/10 text-accent-primary'
                     : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
                 )}
@@ -101,7 +82,34 @@ export function Sidebar({ profile }: SidebarProps) {
                 <item.icon className="h-4.5 w-4.5" />
                 {item.label}
               </Link>
-            ))}
+            );
+          })}
+        </div>
+
+        {(profile.role === 'creator' || profile.role === 'admin') && (
+          <div className="mb-4">
+            <p className="px-3 text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
+              Creator
+            </p>
+            {creatorNav.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={clsx(
+                    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-accent-primary/10 text-accent-primary'
+                      : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
+                  )}
+                >
+                  <item.icon className="h-4.5 w-4.5" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         )}
 
@@ -110,21 +118,25 @@ export function Sidebar({ profile }: SidebarProps) {
             <p className="px-3 text-xs font-medium text-text-muted uppercase tracking-wider mb-2">
               Admin
             </p>
-            {adminNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={clsx(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-                  pathname === item.href || pathname.startsWith(item.href + '/')
-                    ? 'bg-accent-primary/10 text-accent-primary'
-                    : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
-                )}
-              >
-                <item.icon className="h-4.5 w-4.5" />
-                {item.label}
-              </Link>
-            ))}
+            {adminNav.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={clsx(
+                    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+                    isActive
+                      ? 'bg-accent-primary/10 text-accent-primary'
+                      : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
+                  )}
+                >
+                  <item.icon className="h-4.5 w-4.5" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         )}
       </nav>
