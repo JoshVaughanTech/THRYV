@@ -13,9 +13,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'THRYV — Where Training Comes Together',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: 'THRYV — Train with the Best Coaches on Earth',
   description:
-    'Premium fitness platform connecting athletes with world-class coaches. Subscribe, train, and track your progress.',
+    'Access structured programs from elite coaches, track every workout, build momentum, and join a community that pushes you forward.',
+  keywords: ['fitness', 'training', 'coaching', 'workout tracker', 'programs'],
+  openGraph: {
+    title: 'THRYV — Train with the Best Coaches on Earth',
+    description:
+      'Access structured programs from elite coaches, track every workout, build momentum, and join a community that pushes you forward.',
+    siteName: 'THRYV',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'THRYV — Train with the Best Coaches on Earth',
+    description:
+      'Access structured programs from elite coaches, track every workout, build momentum, and join a community that pushes you forward.',
+  },
 };
 
 export default function RootLayout({

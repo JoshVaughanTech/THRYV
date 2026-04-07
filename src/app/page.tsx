@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   Zap,
@@ -9,6 +10,11 @@ import {
   Trophy,
   BarChart3,
 } from 'lucide-react';
+
+export const metadata: Metadata = {
+  description:
+    'Train with elite coaches, follow structured programs, track every workout, and build momentum. Start your 7-day free trial today.',
+};
 
 export default function LandingPage() {
   return (
