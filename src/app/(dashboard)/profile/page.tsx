@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { ChevronRight, LogOut, Settings } from 'lucide-react';
+import { SubscriptionButton } from './subscription-button';
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -139,6 +140,14 @@ export default async function ProfilePage() {
                 {creditBalance ?? 0}
               </span>
             </div>
+          </div>
+
+          {/* Subscribe / Manage button */}
+          <div className="px-5 py-4">
+            <SubscriptionButton
+              status={subscription?.status || null}
+              hasStripeCustomer={!!subscription?.stripe_customer_id}
+            />
           </div>
         </div>
       </section>

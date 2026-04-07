@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { createClient } from '@/lib/supabase/client';
-import { Coins, DollarSign, Download, Play } from 'lucide-react';
+import { Coins, DollarSign, Download, Play, RefreshCw } from 'lucide-react';
 
 export default function AdminManagementPage() {
   const supabase = createClient();
@@ -17,6 +17,43 @@ export default function AdminManagementPage() {
   const [creditDescription, setCreditDescription] = useState('');
   const [creditLoading, setCreditLoading] = useState(false);
   const [creditMessage, setCreditMessage] = useState('');
+
+  // Monthly Credit Refresh
+  const [refreshLoading, setRefreshLoading] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState('');
+
+  async function handleMonthlyRefresh() {
+    setRefreshLoading(true);
+    setRefreshMessage('');
+
+    // Get all active subscribers
+    const { data: activeSubs } = await supabase
+      .from('subscriptions')
+      .select('user_id')
+      .in('status', ['active', 'trial']);
+
+    if (!activeSubs || activeSubs.length === 0) {
+      setRefreshMessage('No active subscribers found.');
+      setRefreshLoading(false);
+      return;
+    }
+
+    const credits = activeSubs.map((s: any) => ({
+      user_id: s.user_id,
+      amount: 5,
+      event_type: 'monthly_grant',
+      description: `Monthly credit grant — ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`,
+    }));
+
+    const { error } = await supabase.from('credit_ledger').insert(credits);
+
+    if (error) {
+      setRefreshMessage(`Error: ${error.message}`);
+    } else {
+      setRefreshMessage(`Granted 5 credits to ${activeSubs.length} subscriber${activeSubs.length !== 1 ? 's' : ''}`);
+    }
+    setRefreshLoading(false);
+  }
 
   // Payout
   const [payoutMonth, setPayoutMonth] = useState('');
@@ -191,6 +228,26 @@ export default function AdminManagementPage() {
         <h1 className="text-2xl font-bold text-text-primary">Admin Management</h1>
         <p className="text-text-secondary mt-1">Credit adjustments and payout operations</p>
       </div>
+
+      {/* Monthly Credit Refresh */}
+      <Card className="mb-6">
+        <h2 className="font-semibold text-text-primary mb-4 flex items-center gap-2">
+          <RefreshCw className="h-5 w-5 text-accent-primary" />
+          Monthly Credit Refresh
+        </h2>
+        <p className="text-sm text-text-muted mb-4">
+          Grant 5 credits to all active and trial subscribers. Run once per billing cycle.
+        </p>
+        {refreshMessage && (
+          <p className={`text-sm mb-4 ${refreshMessage.startsWith('Error') ? 'text-error' : 'text-success'}`}>
+            {refreshMessage}
+          </p>
+        )}
+        <Button onClick={handleMonthlyRefresh} loading={refreshLoading} className="gap-1.5">
+          <RefreshCw className="h-4 w-4" />
+          Grant Monthly Credits
+        </Button>
+      </Card>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Credit Adjustment */}
