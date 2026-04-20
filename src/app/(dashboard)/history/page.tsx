@@ -118,12 +118,12 @@ export default async function HistoryPage() {
 
                 <div className="flex items-center gap-4 mt-3">
                   <div className="flex items-center gap-1.5">
-                    <Clock className="h-3 w-3 text-[#6c5ce7]" />
+                    <Clock className="h-3 w-3 text-[#00E5CC]" />
                     <span className="text-[11px] font-medium text-[#a0a0b8]">{durationStr}</span>
                   </div>
                   {volume !== undefined && volume > 0 && (
                     <div className="flex items-center gap-1.5">
-                      <Dumbbell className="h-3 w-3 text-[#6c5ce7]" />
+                      <Dumbbell className="h-3 w-3 text-[#00E5CC]" />
                       <span className="text-[11px] font-medium text-[#a0a0b8]">
                         {volume.toLocaleString()} lb
                       </span>

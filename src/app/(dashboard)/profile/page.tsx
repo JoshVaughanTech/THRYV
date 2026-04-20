@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { ChevronRight, LogOut, Settings } from 'lucide-react';
 import { SubscriptionButton } from './subscription-button';
+import { AvatarUpload } from '@/components/ui/avatar-upload';
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -89,9 +90,10 @@ export default async function ProfilePage() {
       {/* ── Avatar Section ── */}
       <section className="flex flex-col items-center pt-6 pb-8">
         <div className="relative mb-3">
-          <div className="w-[72px] h-[72px] rounded-full border-2 border-[#6c5ce7] bg-gradient-to-br from-[#6c5ce7]/30 to-[#00d2ff]/20 flex items-center justify-center text-2xl font-bold text-white">
-            {initials}
-          </div>
+          <AvatarUpload
+            currentAvatarUrl={profile?.avatar_url}
+            fullName={profile?.full_name}
+          />
         </div>
         <h1 className="text-xl font-bold text-white">
           {profile?.full_name || 'Athlete'}
@@ -100,7 +102,7 @@ export default async function ProfilePage() {
 
         {/* Badges row */}
         <div className="flex items-center gap-2 mt-3">
-          <span className="inline-flex items-center rounded-full bg-[#6c5ce7]/10 border border-[#6c5ce7]/20 px-3 py-1 text-xs font-semibold text-[#6c5ce7] tracking-wide">
+          <span className="inline-flex items-center rounded-full bg-[#00E5CC]/10 border border-[#00E5CC]/20 px-3 py-1 text-xs font-semibold text-[#00E5CC] tracking-wide">
             LEVEL {momentumLevel}
           </span>
           {(streak?.current_streak ?? 0) > 0 && (
@@ -117,7 +119,7 @@ export default async function ProfilePage() {
           {/* Card header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a3a]">
             <h2 className="text-base font-semibold text-white">Subscription</h2>
-            <span className="inline-flex items-center rounded-full bg-[#6c5ce7]/10 border border-[#6c5ce7]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#6c5ce7] uppercase tracking-wider">
+            <span className="inline-flex items-center rounded-full bg-[#00E5CC]/10 border border-[#00E5CC]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#00E5CC] uppercase tracking-wider">
               {subscription?.status || 'None'}
             </span>
           </div>
@@ -136,7 +138,7 @@ export default async function ProfilePage() {
             </div>
             <div className="flex items-center justify-between px-5 py-3.5">
               <span className="text-sm text-[#666]">Credits remaining</span>
-              <span className="text-sm font-semibold text-[#6c5ce7]">
+              <span className="text-sm font-semibold text-[#00E5CC]">
                 {creditBalance ?? 0}
               </span>
             </div>
@@ -181,7 +183,7 @@ export default async function ProfilePage() {
                 >
                   <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-4 hover:border-[#2a2a3a] transition-colors">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6c5ce7]/30 to-[#00d2ff]/20 flex items-center justify-center text-xs font-bold text-[#6c5ce7] flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00E5CC]/30 to-[#00d2ff]/20 flex items-center justify-center text-xs font-bold text-[#00E5CC] flex-shrink-0">
                         {programInitials}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -193,13 +195,13 @@ export default async function ProfilePage() {
                           {creatorName}
                         </p>
                       </div>
-                      <span className="text-sm font-semibold text-[#6c5ce7] flex-shrink-0">
+                      <span className="text-sm font-semibold text-[#00E5CC] flex-shrink-0">
                         {progressPct}%
                       </span>
                     </div>
                     <div className="h-1.5 rounded-full bg-[#2a2a3a] overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-[#6c5ce7] transition-all"
+                        className="h-full rounded-full bg-[#00E5CC] transition-all"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
@@ -213,7 +215,7 @@ export default async function ProfilePage() {
             <p className="text-sm text-[#666] mb-2">No active programs</p>
             <Link
               href="/programs"
-              className="text-sm text-[#6c5ce7] hover:underline"
+              className="text-sm text-[#00E5CC] hover:underline"
             >
               Browse Programs
             </Link>
@@ -249,7 +251,7 @@ export default async function ProfilePage() {
                     </div>
                     <span
                       className={`text-sm font-semibold flex-shrink-0 ${
-                        isPositive ? 'text-[#6c5ce7]' : 'text-[#ff5252]'
+                        isPositive ? 'text-[#00E5CC]' : 'text-[#ff5252]'
                       }`}
                     >
                       {isPositive ? '+' : ''}

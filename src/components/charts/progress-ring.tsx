@@ -74,7 +74,7 @@ interface DualProgressRingProps {
 
 export function DualProgressRing({
   outerPercentage,
-  outerColor = '#6c5ce7',
+  outerColor = '#00E5CC',
   outerLabel,
   outerValue,
   innerPercentage,

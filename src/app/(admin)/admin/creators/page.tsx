@@ -33,8 +33,8 @@ export default async function AdminCreatorsPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-[#6c5ce7]/10 flex items-center justify-center flex-shrink-0">
-            <Users className="h-5 w-5 text-[#6c5ce7]" />
+          <div className="w-10 h-10 rounded-lg bg-[#00E5CC]/10 flex items-center justify-center flex-shrink-0">
+            <Users className="h-5 w-5 text-[#00E5CC]" />
           </div>
           <div>
             <p className="text-sm text-text-muted">Total Creators</p>
@@ -99,8 +99,8 @@ export default async function AdminCreatorsPage() {
                             className="w-8 h-8 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-[#6c5ce7]/20 flex items-center justify-center">
-                            <span className="text-xs font-bold text-[#6c5ce7]">
+                          <div className="w-8 h-8 rounded-full bg-[#00E5CC]/20 flex items-center justify-center">
+                            <span className="text-xs font-bold text-[#00E5CC]">
                               {(creator.profiles?.full_name || '?').charAt(0).toUpperCase()}
                             </span>
                           </div>

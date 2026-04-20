@@ -14,6 +14,7 @@ import {
   Settings,
   LogOut,
   Shield,
+  Apple,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@/types/database';
@@ -26,6 +27,7 @@ const userNav = [
   { href: '/home', label: 'Home', icon: Home },
   { href: '/programs', label: 'Discover', icon: Search },
   { href: '/my-programs', label: 'My Programs', icon: Calendar },
+  { href: '/nutrition', label: 'Nutrition', icon: Apple },
   { href: '/profile', label: 'Profile', icon: User },
 ];
 

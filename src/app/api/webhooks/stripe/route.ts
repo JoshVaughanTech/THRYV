@@ -9,6 +9,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 });
   }
 
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 503 });
+  }
+
   const body = await request.text();
   const headersList = await headers();
   const sig = headersList.get('stripe-signature');
@@ -22,7 +26,7 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err: any) {
     return NextResponse.json(
@@ -42,7 +46,7 @@ export async function POST(request: Request) {
       // Find user by stripe customer ID
       const { data: sub } = await supabase
         .from('subscriptions')
-        .select('user_id')
+        .select('user_id, status')
         .eq('stripe_customer_id', customerId)
         .single();
 
@@ -62,13 +66,23 @@ export async function POST(request: Request) {
           })
           .eq('stripe_customer_id', customerId);
 
-        // Grant monthly credits on renewal
-        if (subscription.status === 'active') {
+        // Grant monthly credits on renewal (active status, was not already active)
+        if (subscription.status === 'active' && sub.status !== 'active') {
           await supabase.from('credit_ledger').insert({
             user_id: sub.user_id,
             amount: 5,
             event_type: 'monthly_grant',
             description: 'Monthly subscription credits',
+          });
+        }
+
+        // Grant trial credits when trial starts (only if transitioning to trial)
+        if (subscription.status === 'trialing' && sub.status !== 'trial') {
+          await supabase.from('credit_ledger').insert({
+            user_id: sub.user_id,
+            amount: 2,
+            event_type: 'trial_grant',
+            description: 'Free trial credits',
           });
         }
       }
@@ -85,6 +99,41 @@ export async function POST(request: Request) {
         .eq('stripe_customer_id', customerId);
       break;
     }
+
+    case 'invoice.payment_failed': {
+      const invoice = event.data.object as Stripe.Invoice;
+      const customerId = invoice.customer as string;
+
+      // Mark subscription as cancelled on payment failure
+      if (customerId) {
+        await supabase
+          .from('subscriptions')
+          .update({ status: 'cancelled' })
+          .eq('stripe_customer_id', customerId);
+
+        // Notify user
+        const { data: sub } = await supabase
+          .from('subscriptions')
+          .select('user_id')
+          .eq('stripe_customer_id', customerId)
+          .single();
+
+        if (sub) {
+          await supabase.from('notifications').insert({
+            user_id: sub.user_id,
+            type: 'credit_received',
+            title: 'Payment Failed',
+            body: 'Your subscription payment failed. Please update your payment method to continue.',
+            data: { event: 'payment_failed' },
+          });
+        }
+      }
+      break;
+    }
+
+    default:
+      // Unhandled event — return 200 to prevent Stripe retries
+      break;
   }
 
   return NextResponse.json({ received: true });

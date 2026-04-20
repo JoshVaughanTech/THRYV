@@ -4,7 +4,7 @@ import { CompletionsLineChart } from '@/components/charts/completions-line-chart
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 const PAYOUT_WEIGHTS = [
-  { name: 'Completions', value: 50, color: '#6c5ce7' },
+  { name: 'Completions', value: 50, color: '#00E5CC' },
   { name: 'Time spent', value: 30, color: '#00d2ff' },
   { name: 'Engagement', value: 20, color: '#ffab00' },
 ];

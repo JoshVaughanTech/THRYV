@@ -138,7 +138,7 @@ export default async function CreatorCommunityPage() {
 
       {/* Filter Pills */}
       <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
-        <button className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium bg-[#6c5ce7] text-white transition-colors">
+        <button className="shrink-0 rounded-full px-4 py-1.5 text-sm font-medium bg-[#00E5CC] text-white transition-colors">
           All programs
         </button>
         {(programs || []).map((program: any) => (
@@ -163,7 +163,7 @@ export default async function CreatorCommunityPage() {
             {(totalPostCount ?? 0).toLocaleString()}
           </p>
           <p className="text-xs mt-1">
-            <span className="text-[#6c5ce7] font-medium">
+            <span className="text-[#00E5CC] font-medium">
               +{postsThisWeek ?? 0}
             </span>
             <span className="text-[#6b6b80] ml-1">this week</span>
@@ -180,7 +180,7 @@ export default async function CreatorCommunityPage() {
             {(totalCommentCount ?? 0).toLocaleString()}
           </p>
           <p className="text-xs mt-1">
-            <span className="text-[#6c5ce7] font-medium">
+            <span className="text-[#00E5CC] font-medium">
               +{commentsThisWeek ?? 0}
             </span>
             <span className="text-[#6b6b80] ml-1">this week</span>
@@ -195,7 +195,7 @@ export default async function CreatorCommunityPage() {
           </div>
           <p className="text-3xl font-bold text-white">{engagementRate}%</p>
           <p className="text-xs mt-1">
-            <span className="text-[#6c5ce7] font-medium">
+            <span className="text-[#00E5CC] font-medium">
               {weeklyActivity} interactions
             </span>
             <span className="text-[#6b6b80] ml-1">this week</span>
@@ -231,7 +231,7 @@ export default async function CreatorCommunityPage() {
                 <div
                   className={`w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                     isCreator
-                      ? 'border-2 border-[#6c5ce7] bg-[#1A2A0A] text-[#6c5ce7]'
+                      ? 'border-2 border-[#00E5CC] bg-[#1A2A0A] text-[#00E5CC]'
                       : 'bg-[#2a2a3a] text-[#a0a0b8]'
                   }`}
                 >
@@ -243,7 +243,7 @@ export default async function CreatorCommunityPage() {
                       {authorName}
                     </span>
                     {isCreator && (
-                      <span className="inline-flex items-center rounded-full bg-[#1A2A0A] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#6c5ce7]">
+                      <span className="inline-flex items-center rounded-full bg-[#1A2A0A] px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#00E5CC]">
                         Creator
                       </span>
                     )}
@@ -261,7 +261,7 @@ export default async function CreatorCommunityPage() {
 
               {/* Post Actions */}
               <div className="border-t border-[#2a2a3a] pt-3 flex items-center gap-4">
-                <button className="flex items-center gap-1.5 text-[#6b6b80] hover:text-[#6c5ce7] transition-colors text-sm">
+                <button className="flex items-center gap-1.5 text-[#6b6b80] hover:text-[#00E5CC] transition-colors text-sm">
                   <Heart className="h-4 w-4" />
                   <span>Like</span>
                 </button>

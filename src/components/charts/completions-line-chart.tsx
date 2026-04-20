@@ -40,7 +40,7 @@ export function CompletionsLineChart({ data7d, data30d, data90d }: CompletionsLi
             onClick={() => setPeriod(p)}
             className={`px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer ${
               period === p
-                ? 'bg-[#6c5ce7] text-white'
+                ? 'bg-[#00E5CC] text-white'
                 : 'border border-[#2a2a3a] text-[#a0a0b8] hover:text-white'
             }`}
           >
@@ -78,10 +78,10 @@ export function CompletionsLineChart({ data7d, data30d, data90d }: CompletionsLi
             <Line
               type="monotone"
               dataKey="completions"
-              stroke="#6c5ce7"
+              stroke="#00E5CC"
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, fill: '#6c5ce7' }}
+              activeDot={{ r: 4, fill: '#00E5CC' }}
             />
           </LineChart>
         </ResponsiveContainer>

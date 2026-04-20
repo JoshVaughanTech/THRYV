@@ -49,7 +49,7 @@ function ChangeEmailForm({ currentEmail }: { currentEmail: string }) {
   return (
     <section className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] overflow-hidden">
       <div className="flex items-center gap-3 px-5 py-4 border-b border-[#2a2a3a]">
-        <Mail className="h-5 w-5 text-[#6c5ce7]" />
+        <Mail className="h-5 w-5 text-[#00E5CC]" />
         <h2 className="text-base font-semibold text-white">Change Email</h2>
       </div>
 
@@ -76,7 +76,7 @@ function ChangeEmailForm({ currentEmail }: { currentEmail: string }) {
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#6c5ce7] transition-colors"
+            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#00E5CC] transition-colors"
           />
         </div>
 
@@ -95,7 +95,7 @@ function ChangeEmailForm({ currentEmail }: { currentEmail: string }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-[#6c5ce7] hover:bg-[#7c6ff7] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+          className="w-full rounded-lg bg-[#00E5CC] hover:bg-[#7c6ff7] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors"
         >
           {loading ? 'Saving...' : 'Update Email'}
         </button>
@@ -153,7 +153,7 @@ function ChangePasswordForm() {
   return (
     <section className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] overflow-hidden">
       <div className="flex items-center gap-3 px-5 py-4 border-b border-[#2a2a3a]">
-        <Lock className="h-5 w-5 text-[#6c5ce7]" />
+        <Lock className="h-5 w-5 text-[#00E5CC]" />
         <h2 className="text-base font-semibold text-white">Change Password</h2>
       </div>
 
@@ -171,7 +171,7 @@ function ChangePasswordForm() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             placeholder="Minimum 6 characters"
-            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#6c5ce7] transition-colors"
+            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#00E5CC] transition-colors"
           />
         </div>
 
@@ -188,7 +188,7 @@ function ChangePasswordForm() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter your new password"
-            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#6c5ce7] transition-colors"
+            className="w-full rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] px-3.5 py-2.5 text-sm text-white placeholder:text-[#444] focus:outline-none focus:border-[#00E5CC] transition-colors"
           />
         </div>
 
@@ -207,7 +207,7 @@ function ChangePasswordForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-[#6c5ce7] hover:bg-[#7c6ff7] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+          className="w-full rounded-lg bg-[#00E5CC] hover:bg-[#7c6ff7] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2.5 text-sm font-semibold text-white transition-colors"
         >
           {loading ? 'Saving...' : 'Update Password'}
         </button>

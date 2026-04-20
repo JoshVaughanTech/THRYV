@@ -1,131 +1,205 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ProgressCharts } from './progress-charts';
+import { ProgressDashboard } from './progress-dashboard';
 
 export default async function ProgressPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  const now = new Date();
+  const ninetyDaysAgo = new Date(now);
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
   const [
     { data: profile },
     { data: streak },
-    { data: momentum },
-    { data: recentMomentum },
-    { count: sessionCount },
-    { data: recentSessions },
+    { data: momentumTotal },
+    { data: momentumEvents },
+    { data: sessions },
+    { data: personalRecords },
+    { data: activations },
   ] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', user.id).single(),
+    supabase.from('profiles').select('created_at').eq('id', user.id).single(),
     supabase.from('streaks').select('*').eq('user_id', user.id).single(),
     supabase.rpc('get_momentum_total', { p_user_id: user.id }),
     supabase
       .from('momentum_events')
-      .select('*')
+      .select('points, event_type, created_at')
       .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(30),
+      .gte('created_at', ninetyDaysAgo.toISOString())
+      .order('created_at', { ascending: true }),
     supabase
       .from('workout_sessions')
-      .select('id', { count: 'exact', head: true })
+      .select('id, completed_at, duration_seconds, workout_id, program_id')
+      .eq('user_id', user.id)
+      .gte('completed_at', ninetyDaysAgo.toISOString())
+      .order('completed_at', { ascending: true }),
+    supabase
+      .from('personal_records')
+      .select('exercise_name, weight, reps, estimated_1rm, achieved_at')
+      .eq('user_id', user.id)
+      .order('achieved_at', { ascending: true }),
+    supabase
+      .from('program_activations')
+      .select('id, is_active, completed_at')
       .eq('user_id', user.id),
-    supabase
-      .from('workout_sessions')
-      .select('completed_at, duration_minutes')
-      .eq('user_id', user.id)
-      .order('completed_at', { ascending: false })
-      .limit(30),
   ]);
 
-  // Momentum level calculations
-  const momentumTotal = momentum || 0;
-  const momentumLevel = Math.floor(momentumTotal / 500) + 1;
-  const levelFloor = (momentumLevel - 1) * 500;
-  const nextLevelTotal = momentumLevel * 500;
-  const nextLevelProgress = momentumTotal - levelFloor;
-  const pointsToNextLevel = nextLevelTotal - momentumTotal;
-
-  // Build daily momentum data for chart (last 7 days)
-  const dailyMomentum = buildDailyMomentum(recentMomentum || []);
-
-  // Calculate weekly workout rate for progress rings
-  const totalWorkouts = sessionCount ?? 0;
-  const weeksActive = Math.max(
-    1,
-    Math.ceil(
-      (Date.now() - new Date(profile?.created_at || Date.now()).getTime()) /
-        (7 * 24 * 60 * 60 * 1000)
-    )
-  );
-  const avgPerWeek = Math.round((totalWorkouts / weeksActive) * 10) / 10;
-  // Assume target of 4 workouts/week for percentage
-  const workoutPct = Math.min(100, Math.round((avgPerWeek / 4) * 100));
-
-  // Consistency: days with workouts in last 7 days
-  const last7Days = new Set<string>();
-  (recentSessions || []).forEach((s: any) => {
-    if (!s.completed_at) return;
-    const d = new Date(s.completed_at);
-    const now = new Date();
-    const diff = (now.getTime() - d.getTime()) / (24 * 60 * 60 * 1000);
-    if (diff <= 7) last7Days.add(d.toISOString().split('T')[0]);
-  });
-  const consistencyPct = Math.round((last7Days.size / 7) * 100);
-
-  // Hours per week: sum duration_minutes from recent sessions in last 7 days
-  let weeklyMinutes = 0;
-  (recentSessions || []).forEach((s: any) => {
-    if (!s.completed_at) return;
-    const d = new Date(s.completed_at);
-    const now = new Date();
-    const diff = (now.getTime() - d.getTime()) / (24 * 60 * 60 * 1000);
-    if (diff <= 7) weeklyMinutes += s.duration_minutes || 0;
-  });
-  const hrsPerWeek = Math.round((weeklyMinutes / 60) * 10) / 10;
-
-  return (
-    <div className="max-w-lg mx-auto">
-      <ProgressCharts
-        workoutPct={workoutPct}
-        consistencyPct={consistencyPct}
-        avgPerWeek={avgPerWeek}
-        consistencyDays={last7Days.size}
-        dailyMomentum={dailyMomentum}
-        momentum={momentumTotal}
-        momentumLevel={momentumLevel}
-        currentStreak={streak?.current_streak || 0}
-        longestStreak={streak?.longest_streak || 0}
-        hrsPerWeek={hrsPerWeek}
-        totalWorkouts={totalWorkouts}
-        nextLevelProgress={momentumTotal}
-        nextLevelTotal={nextLevelTotal}
-        pointsToNextLevel={pointsToNextLevel}
-      />
-    </div>
-  );
-}
-
-function buildDailyMomentum(events: any[]): { day: string; points: number }[] {
-  const days: Record<string, number> = {};
-  const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-  // Initialize last 7 days
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split('T')[0];
-    days[key] = 0;
+  // Fetch set_logs for volume calculation
+  const sessionIds = (sessions || []).map((s: any) => s.id);
+  let setLogs: any[] = [];
+  if (sessionIds.length > 0) {
+    const { data } = await supabase
+      .from('set_logs')
+      .select('session_id, weight, reps, completed')
+      .in('session_id', sessionIds);
+    setLogs = data || [];
   }
 
-  // Sum points per day
-  for (const event of events) {
-    const key = new Date(event.created_at).toISOString().split('T')[0];
-    if (key in days) {
-      days[key] += event.points || 0;
+  // Build volume per session
+  const volumeBySession: Record<string, number> = {};
+  for (const log of setLogs) {
+    if (!log.completed) continue;
+    const vol = (Number(log.weight) || 0) * (Number(log.reps) || 0);
+    volumeBySession[log.session_id] = (volumeBySession[log.session_id] || 0) + vol;
+  }
+
+  // Build daily session data (date -> { count, volume, duration })
+  const dailyData: Record<string, { count: number; volume: number; duration: number }> = {};
+  for (const s of sessions || []) {
+    const dateKey = new Date(s.completed_at).toISOString().split('T')[0];
+    if (!dailyData[dateKey]) dailyData[dateKey] = { count: 0, volume: 0, duration: 0 };
+    dailyData[dateKey].count += 1;
+    dailyData[dateKey].volume += volumeBySession[s.id] || 0;
+    dailyData[dateKey].duration += s.duration_seconds || 0;
+  }
+
+  // Build weekly aggregated data for charts (last 12 weeks)
+  const weeklyVolume: { week: string; volume: number; workouts: number; duration: number }[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const weekStart = new Date(now);
+    weekStart.setDate(weekStart.getDate() - (i * 7 + weekStart.getDay()));
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const label = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    let volume = 0;
+    let workouts = 0;
+    let duration = 0;
+
+    for (const [dateStr, data] of Object.entries(dailyData)) {
+      const d = new Date(dateStr);
+      if (d >= weekStart && d < weekEnd) {
+        volume += data.volume;
+        workouts += data.count;
+        duration += data.duration;
+      }
+    }
+
+    weeklyVolume.push({ week: label, volume, workouts, duration: Math.round(duration / 60) });
+  }
+
+  // Heatmap data: last 84 days (12 weeks)
+  const heatmapData: { date: string; count: number }[] = [];
+  for (let i = 83; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    heatmapData.push({ date: key, count: dailyData[key]?.count || 0 });
+  }
+
+  // PR data: group by exercise, track history
+  const prByExercise: Record<string, { name: string; best1rm: number; bestWeight: number; bestReps: number; achievedAt: string; history: { date: string; estimated_1rm: number }[] }> = {};
+  for (const pr of personalRecords || []) {
+    const e1rm = Number(pr.estimated_1rm) || 0;
+    if (!prByExercise[pr.exercise_name]) {
+      prByExercise[pr.exercise_name] = {
+        name: pr.exercise_name,
+        best1rm: 0,
+        bestWeight: 0,
+        bestReps: 0,
+        achievedAt: pr.achieved_at,
+        history: [],
+      };
+    }
+    const entry = prByExercise[pr.exercise_name];
+    entry.history.push({ date: pr.achieved_at, estimated_1rm: e1rm });
+    if (e1rm > entry.best1rm) {
+      entry.best1rm = e1rm;
+      entry.bestWeight = Number(pr.weight);
+      entry.bestReps = pr.reps;
+      entry.achievedAt = pr.achieved_at;
     }
   }
 
-  return Object.entries(days).map(([dateStr, points]) => ({
-    day: dayLabels[new Date(dateStr).getDay()],
-    points,
-  }));
+  const topPRs = Object.values(prByExercise)
+    .sort((a, b) => b.best1rm - a.best1rm)
+    .slice(0, 6);
+
+  // Totals
+  const totalSessions = sessions?.length || 0;
+  const totalVolume = Object.values(volumeBySession).reduce((sum, v) => sum + v, 0);
+  const totalDuration = (sessions || []).reduce((sum: number, s: any) => sum + (s.duration_seconds || 0), 0);
+  const totalPRs = personalRecords?.length || 0;
+  const programsCompleted = (activations || []).filter((a: any) => a.completed_at).length;
+  const programsActive = (activations || []).filter((a: any) => a.is_active && !a.completed_at).length;
+
+  // Momentum level
+  const momentum = momentumTotal || 0;
+  const momentumLevel = Math.floor(momentum / 500) + 1;
+  const nextLevelTotal = momentumLevel * 500;
+  const pointsToNext = nextLevelTotal - momentum;
+
+  // Build daily momentum for bar chart
+  const dailyMomentum: { day: string; points: number }[] = [];
+  const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    let pts = 0;
+    for (const ev of momentumEvents || []) {
+      if (new Date(ev.created_at).toISOString().split('T')[0] === key) {
+        pts += ev.points || 0;
+      }
+    }
+    dailyMomentum.push({ day: dayLabels[d.getDay()], points: pts });
+  }
+
+  // Consistency: unique workout days in last 7 and 30 days
+  const last7 = new Set<string>();
+  const last30 = new Set<string>();
+  for (const s of sessions || []) {
+    const d = new Date(s.completed_at);
+    const diff = (now.getTime() - d.getTime()) / (24 * 60 * 60 * 1000);
+    const key = d.toISOString().split('T')[0];
+    if (diff <= 7) last7.add(key);
+    if (diff <= 30) last30.add(key);
+  }
+
+  return (
+    <ProgressDashboard
+      totalSessions={totalSessions}
+      totalVolume={totalVolume}
+      totalDuration={totalDuration}
+      totalPRs={totalPRs}
+      programsActive={programsActive}
+      programsCompleted={programsCompleted}
+      currentStreak={streak?.current_streak || 0}
+      longestStreak={streak?.longest_streak || 0}
+      momentum={momentum}
+      momentumLevel={momentumLevel}
+      nextLevelTotal={nextLevelTotal}
+      pointsToNext={pointsToNext}
+      dailyMomentum={dailyMomentum}
+      weeklyVolume={weeklyVolume}
+      heatmapData={heatmapData}
+      topPRs={topPRs}
+      consistencyLast7={last7.size}
+      consistencyLast30={last30.size}
+      memberSince={profile?.created_at || now.toISOString()}
+    />
+  );
 }

@@ -92,6 +92,37 @@ export default async function CreatorDashboardPage() {
 
   const chartData = buildChartData(completionEvents || []);
 
+  // Calculate month-over-month trends
+  const now = new Date();
+  const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+  const lastMonthEnd = thisMonthStart;
+
+  const [
+    { count: thisMonthActivations },
+    { count: lastMonthActivations },
+    { count: thisMonthCompletions },
+    { count: lastMonthCompletions },
+  ] = await Promise.all([
+    supabase.from('usage_events').select('*', { count: 'exact', head: true })
+      .eq('creator_id', creator.id).eq('event_type', 'program_activation').gte('created_at', thisMonthStart),
+    supabase.from('usage_events').select('*', { count: 'exact', head: true })
+      .eq('creator_id', creator.id).eq('event_type', 'program_activation').gte('created_at', lastMonthStart).lt('created_at', lastMonthEnd),
+    supabase.from('usage_events').select('*', { count: 'exact', head: true })
+      .eq('creator_id', creator.id).eq('event_type', 'workout_completion').gte('created_at', thisMonthStart),
+    supabase.from('usage_events').select('*', { count: 'exact', head: true })
+      .eq('creator_id', creator.id).eq('event_type', 'workout_completion').gte('created_at', lastMonthStart).lt('created_at', lastMonthEnd),
+  ]);
+
+  function calcTrend(current: number, previous: number): string {
+    if (previous === 0) return current > 0 ? '+100%' : '0%';
+    const pct = Math.round(((current - previous) / previous) * 100);
+    return pct >= 0 ? `+${pct}%` : `${pct}%`;
+  }
+
+  const activationTrend = calcTrend(thisMonthActivations ?? 0, lastMonthActivations ?? 0);
+  const completionTrend = calcTrend(thisMonthCompletions ?? 0, lastMonthCompletions ?? 0);
+
   // Per-program stats
   const programStats = await Promise.all(
     (programs || []).map(async (p: any) => {
@@ -142,7 +173,7 @@ export default async function CreatorDashboardPage() {
           </div>
           <Link
             href="/builder"
-            className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors"
+            className="flex items-center gap-2 rounded-xl bg-[#00E5CC] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#00CCBB] transition-colors"
           >
             <Plus className="h-4 w-4" />
             New program
@@ -156,28 +187,28 @@ export default async function CreatorDashboardPage() {
           label="Active Users"
           value={uniqueActiveUsers.toLocaleString()}
           icon={Users}
-          trend="+12.3%"
+          trend={activationTrend}
           trendLabel="vs last month"
         />
         <KPICard
           label="Activations"
           value={(totalActivations ?? 0).toLocaleString()}
           icon={Zap}
-          trend="+8.7%"
+          trend={activationTrend}
           trendLabel="vs last month"
         />
         <KPICard
           label="Completions"
           value={(totalCompletions ?? 0).toLocaleString()}
           icon={CheckCircle}
-          trend="+22.1%"
+          trend={completionTrend}
           trendLabel="vs last month"
         />
         <KPICard
           label="Est. Earnings"
           value={`$${totalEarnings.toLocaleString(undefined, { minimumFractionDigits: 0 })}`}
           icon={DollarSign}
-          trend="+15.4%"
+          trend={completionTrend}
           trendLabel="vs last month"
           highlight
         />
@@ -206,7 +237,7 @@ export default async function CreatorDashboardPage() {
           <h2 className="text-lg font-bold text-white">Programs</h2>
           <Link
             href="/builder"
-            className="text-sm font-medium text-[#6c5ce7] hover:text-[#7c6ff0] transition-colors"
+            className="text-sm font-medium text-[#00E5CC] hover:text-[#00CCBB] transition-colors"
           >
             View all
           </Link>
@@ -230,7 +261,7 @@ export default async function CreatorDashboardPage() {
                 <td className="py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-[#1f1f2e] flex items-center justify-center">
-                      <Zap className="h-4 w-4 text-[#6c5ce7]" />
+                      <Zap className="h-4 w-4 text-[#00E5CC]" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">{program.title}</p>
@@ -254,7 +285,7 @@ export default async function CreatorDashboardPage() {
                     <div className="flex items-center gap-2">
                       <div className="flex-1 h-1.5 rounded-full bg-[#2a2a3a] max-w-[80px]">
                         <div
-                          className="h-full rounded-full bg-[#6c5ce7]"
+                          className="h-full rounded-full bg-[#00E5CC]"
                           style={{ width: `${program.engagementPct}%` }}
                         />
                       </div>
@@ -264,13 +295,13 @@ export default async function CreatorDashboardPage() {
                     <span className="text-sm text-[#6b6b80]">—</span>
                   )}
                 </td>
-                <td className="text-right text-sm font-medium text-[#6c5ce7]">
+                <td className="text-right text-sm font-medium text-[#00E5CC]">
                   {program.revenue > 0 ? `$${program.revenue.toLocaleString()}` : '—'}
                 </td>
                 <td className="text-right">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] ${
                     program.status === 'published'
-                      ? 'bg-[#1A2A0A] text-[#6c5ce7]'
+                      ? 'bg-[#1A2A0A] text-[#00E5CC]'
                       : 'bg-[#1f1f2e] text-[#6b6b80]'
                   }`}>
                     {program.status === 'published' ? 'Live' : program.status}
@@ -303,18 +334,18 @@ function KPICard({
   return (
     <div className={`rounded-2xl border p-5 ${
       highlight
-        ? 'border-[#6c5ce7]/30 bg-[#6c5ce7]/5'
+        ? 'border-[#00E5CC]/30 bg-[#00E5CC]/5'
         : 'border-[#2a2a3a] bg-[#15151f]'
     }`}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium">{label}</p>
-        <Icon className={`h-4 w-4 ${highlight ? 'text-[#6c5ce7]' : 'text-[#6b6b80]'}`} />
+        <Icon className={`h-4 w-4 ${highlight ? 'text-[#00E5CC]' : 'text-[#6b6b80]'}`} />
       </div>
-      <p className={`text-3xl font-bold mb-1 ${highlight ? 'text-[#6c5ce7]' : 'text-white'}`}>
+      <p className={`text-3xl font-bold mb-1 ${highlight ? 'text-[#00E5CC]' : 'text-white'}`}>
         {value}
       </p>
       <p className="text-xs">
-        <span className="text-[#6c5ce7] font-medium">{trend}</span>
+        <span className="text-[#00E5CC] font-medium">{trend}</span>
         <span className="text-[#6b6b80] ml-1">{trendLabel}</span>
       </p>
     </div>

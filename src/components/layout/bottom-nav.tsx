@@ -16,7 +16,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav role="navigation" aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#1f1f2e] bg-[#0a0a0f] lg:hidden">
+    <nav role="navigation" aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-50 border-t border-[rgba(255,255,255,0.06)] bg-[#0A0A0A] lg:hidden">
       <div className="flex items-center justify-around px-2 py-2">
         {navItems.map((item) => {
           const isActive =
@@ -28,7 +28,7 @@ export function BottomNav() {
               aria-current={isActive ? 'page' : undefined}
               className={clsx(
                 'flex flex-col items-center gap-0.5 px-4 py-1.5 min-w-[56px]',
-                isActive ? 'text-[#6c5ce7]' : 'text-[#6b6b80]'
+                isActive ? 'text-[#00E5CC]' : 'text-[#6b6b80]'
               )}
             >
               <item.icon

@@ -6,6 +6,11 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
   const next = searchParams.get('next') ?? '/home';
 
+  // Validate next is a safe relative URL (prevent open redirect)
+  if (!next.startsWith('/') || next.startsWith('//')) {
+    return NextResponse.redirect(`${origin}/home`);
+  }
+
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);

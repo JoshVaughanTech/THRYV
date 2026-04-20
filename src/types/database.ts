@@ -88,6 +88,9 @@ export interface Exercise {
   reps: string | null;
   notes: string | null;
   video_url: string | null;
+  rest_seconds: number | null;
+  rpe: number | null;
+  tempo: string | null;
   order_index: number;
   created_at: string;
 }
@@ -218,5 +221,40 @@ export interface Notification {
   body: string;
   data: Record<string, unknown> | null;
   read: boolean;
+  created_at: string;
+}
+
+export type MealType = 'breakfast' | 'snack' | 'lunch' | 'dinner';
+export type MealSource = 'manual' | 'ai_scan' | 'barcode';
+
+export interface NutritionDay {
+  id: string;
+  user_id: string;
+  date: string;
+  calorie_target: number;
+  protein_target: number;
+  carb_target: number;
+  fat_target: number;
+  water_ml: number;
+  created_at: string;
+}
+
+export interface Meal {
+  id: string;
+  user_id: string;
+  nutrition_day_id: string;
+  meal_type: MealType;
+  name: string;
+  foods: string | null;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number | null;
+  sugar: number | null;
+  sodium: number | null;
+  source: MealSource;
+  confidence: number | null;
+  logged_at: string;
   created_at: string;
 }

@@ -34,9 +34,9 @@ export default async function HomePage() {
       .eq('is_active', true),
     supabase.from('streaks').select('*').eq('user_id', user.id).single(),
     supabase
-      .from('profiles')
-      .select('id, full_name, avatar_url, bio, specialties, follower_count, program_count, session_count, tier')
-      .in('role', ['coach', 'admin'])
+      .from('creators')
+      .select('id, bio, specialties, follower_count, approved, profiles:user_id(id, full_name, avatar_url)')
+      .eq('approved', true)
       .order('follower_count', { ascending: false })
       .limit(10),
   ]);
@@ -50,6 +50,19 @@ export default async function HomePage() {
   const { data: momentum } = await supabase.rpc('get_momentum_total', {
     p_user_id: user.id,
   });
+
+  // Transform creator data to coach card format
+  const coachCards = (coaches || []).map((c: any) => ({
+    id: c.id,
+    full_name: c.profiles?.full_name || 'Coach',
+    avatar_url: c.profiles?.avatar_url || null,
+    bio: c.bio,
+    specialties: c.specialties || [],
+    follower_count: c.follower_count || 0,
+    program_count: 0,
+    session_count: 0,
+    tier: ((c.follower_count || 0) >= 100 ? 'ELITE' : 'PRO') as 'PRO' | 'ELITE',
+  }));
 
   const filterPills = ['ALL', 'STRENGTH', 'HYBRID', 'CARDIO', 'HIIT'];
 
@@ -73,7 +86,7 @@ export default async function HomePage() {
       {/* ── Header ── */}
       <header className="flex items-center justify-between px-5 pt-6 pb-4">
         <div className="flex items-center gap-2">
-          <Zap className="h-6 w-6 text-[#6c5ce7]" />
+          <Zap className="h-6 w-6 text-[#00E5CC]" />
           <span className="text-lg font-bold tracking-wide text-white">
             THRYV
           </span>
@@ -89,7 +102,7 @@ export default async function HomePage() {
       {/* ── Stats Badges ── */}
       <div className="flex items-center gap-3 overflow-x-auto px-5 pb-4 scrollbar-none">
         <div className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-[#2a2a3a] bg-[#15151f] px-3 py-1.5">
-          <TrendingUp className="h-3.5 w-3.5 text-[#6c5ce7]" />
+          <TrendingUp className="h-3.5 w-3.5 text-[#00E5CC]" />
           <span className="text-xs font-semibold text-white">
             {momentum || 0}
           </span>
@@ -115,7 +128,7 @@ export default async function HomePage() {
       <div className="flex gap-6 border-b border-[#2a2a3a] px-5">
         <button className="relative pb-3 text-sm font-bold tracking-widest text-white">
           MARKETPLACE
-          <span className="absolute bottom-0 left-0 h-[2px] w-full bg-[#6c5ce7]" />
+          <span className="absolute bottom-0 left-0 h-[2px] w-full bg-[#00E5CC]" />
         </button>
         <Link
           href="/programs"
@@ -132,7 +145,7 @@ export default async function HomePage() {
             key={pill}
             className={
               i === 0
-                ? 'flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold bg-[#6c5ce7] text-white'
+                ? 'flex-shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold bg-[#00E5CC] text-white'
                 : 'flex-shrink-0 rounded-full border border-[#2a2a3a] px-4 py-1.5 text-xs font-semibold text-[#a0a0b8]'
             }
           >
@@ -143,7 +156,7 @@ export default async function HomePage() {
 
       {/* ── Coach Carousel ── */}
       <section className="px-5 pb-6">
-        <CoachCardCarousel coaches={coaches || []} />
+        <CoachCardCarousel coaches={coachCards} />
       </section>
 
       {/* ── Trending Programs ── */}
@@ -152,7 +165,7 @@ export default async function HomePage() {
           <h2 className="text-lg font-semibold text-white">Trending Programs</h2>
           <Link
             href="/programs"
-            className="text-xs font-medium text-[#6c5ce7] hover:underline"
+            className="text-xs font-medium text-[#00E5CC] hover:underline"
           >
             See all
           </Link>
@@ -165,8 +178,8 @@ export default async function HomePage() {
               href="/programs"
               className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-4 text-center transition-colors hover:border-[#2a2a3a]"
             >
-              <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#6c5ce7]/10">
-                <Dumbbell className="h-5 w-5 text-[#6c5ce7]" />
+              <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#00E5CC]/10">
+                <Dumbbell className="h-5 w-5 text-[#00E5CC]" />
               </div>
               <p className="text-xs font-semibold text-white truncate">
                 {program.title}

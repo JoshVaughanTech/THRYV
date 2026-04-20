@@ -26,9 +26,9 @@ const iconMap: Record<NotificationType, typeof Dumbbell> = {
 };
 
 const iconColorMap: Record<NotificationType, string> = {
-  workout_complete: 'text-[#6c5ce7]',
+  workout_complete: 'text-[#00E5CC]',
   streak_milestone: 'text-orange-500',
-  level_up: 'text-[#6c5ce7]',
+  level_up: 'text-[#00E5CC]',
   program_activated: 'text-yellow-500',
   credit_received: 'text-yellow-500',
   new_follower: 'text-blue-400',
@@ -37,9 +37,9 @@ const iconColorMap: Record<NotificationType, string> = {
 };
 
 const iconBgMap: Record<NotificationType, string> = {
-  workout_complete: 'bg-[#6c5ce7]/10',
+  workout_complete: 'bg-[#00E5CC]/10',
   streak_milestone: 'bg-orange-500/10',
-  level_up: 'bg-[#6c5ce7]/10',
+  level_up: 'bg-[#00E5CC]/10',
   program_activated: 'bg-yellow-500/10',
   credit_received: 'bg-yellow-500/10',
   new_follower: 'bg-blue-400/10',
@@ -105,8 +105,8 @@ export default async function NotificationsPage() {
         ) : (
           notifications.map((notification: Notification) => {
             const Icon = iconMap[notification.type] ?? Bell;
-            const iconColor = iconColorMap[notification.type] ?? 'text-[#6c5ce7]';
-            const iconBg = iconBgMap[notification.type] ?? 'bg-[#6c5ce7]/10';
+            const iconColor = iconColorMap[notification.type] ?? 'text-[#00E5CC]';
+            const iconBg = iconBgMap[notification.type] ?? 'bg-[#00E5CC]/10';
 
             return (
               <div
@@ -114,7 +114,7 @@ export default async function NotificationsPage() {
                 className={`flex items-start gap-3 rounded-xl border p-4 transition-colors ${
                   notification.read
                     ? 'border-[#2a2a3a] bg-[#15151f]'
-                    : 'border-[#6c5ce7]/20 bg-[#15151f]'
+                    : 'border-[#00E5CC]/20 bg-[#15151f]'
                 }`}
               >
                 {/* Icon */}
@@ -139,7 +139,7 @@ export default async function NotificationsPage() {
                         {timeAgo(notification.created_at)}
                       </span>
                       {!notification.read && (
-                        <span className="h-2 w-2 rounded-full bg-[#6c5ce7]" />
+                        <span className="h-2 w-2 rounded-full bg-[#00E5CC]" />
                       )}
                     </div>
                   </div>

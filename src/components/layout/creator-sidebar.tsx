@@ -55,9 +55,9 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
       {/* Logo + Badge */}
       <div className="px-6 py-6">
         <div className="flex items-center gap-3">
-          <Zap className="h-5 w-5 text-[#6c5ce7]" />
+          <Zap className="h-5 w-5 text-[#00E5CC]" />
           <span className="text-lg font-bold text-white tracking-[2px]">THRYV</span>
-          <span className="ml-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-[1px] bg-[#6c5ce7] text-white">
+          <span className="ml-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-[1px] bg-[#00E5CC] text-white">
             Creator
           </span>
         </div>
@@ -75,7 +75,7 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
               className={clsx(
                 'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-[#6c5ce7] text-white'
+                  ? 'bg-[#00E5CC] text-white'
                   : 'text-[#a0a0b8] hover:bg-[#15151f] hover:text-white'
               )}
             >
@@ -89,7 +89,7 @@ export function CreatorSidebar({ profile }: CreatorSidebarProps) {
       {/* User Profile + Sign Out */}
       <div className="border-t border-[#2a2a3a] p-4">
         <div className="flex items-center gap-3 px-2 mb-3">
-          <div className="w-10 h-10 rounded-full border-2 border-[#6c5ce7] flex items-center justify-center text-sm font-bold text-[#6c5ce7]">
+          <div className="w-10 h-10 rounded-full border-2 border-[#00E5CC] flex items-center justify-center text-sm font-bold text-[#00E5CC]">
             {initials}
           </div>
           <div className="min-w-0">

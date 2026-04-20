@@ -35,7 +35,7 @@ export function MarkReadButton({ userId }: MarkReadButtonProps) {
     <button
       onClick={handleMarkAllRead}
       disabled={loading}
-      className="flex items-center gap-1.5 rounded-lg border border-[#2a2a3a] bg-[#15151f] px-3 py-1.5 text-xs font-medium text-[#a0a0b8] transition-colors hover:border-[#6c5ce7] hover:text-[#6c5ce7] disabled:opacity-50 disabled:cursor-not-allowed"
+      className="flex items-center gap-1.5 rounded-lg border border-[#2a2a3a] bg-[#15151f] px-3 py-1.5 text-xs font-medium text-[#a0a0b8] transition-colors hover:border-[#00E5CC] hover:text-[#00E5CC] disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <CheckCheck className="h-3.5 w-3.5" />
       {loading ? 'Marking...' : 'Mark all as read'}

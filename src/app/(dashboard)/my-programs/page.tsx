@@ -119,8 +119,8 @@ export default async function MyProgramsPage() {
             <div className="text-white text-xl font-bold mt-0.5">My training</div>
           </div>
           <div className="bg-[#15151f] border border-[#2a2a3a] rounded-xl px-3 py-1.5 flex items-center gap-1.5">
-            <Zap className="h-3.5 w-3.5 text-[#6c5ce7]" />
-            <span className="text-[#6c5ce7] text-[13px] font-bold">{(momentum || 0).toLocaleString()}</span>
+            <Zap className="h-3.5 w-3.5 text-[#00E5CC]" />
+            <span className="text-[#00E5CC] text-[13px] font-bold">{(momentum || 0).toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -150,8 +150,8 @@ export default async function MyProgramsPage() {
               <div
                 className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[12px] font-semibold mx-auto mt-1"
                 style={{
-                  background: isDone ? '#6c5ce7' : isToday ? 'transparent' : '#1f1f2e',
-                  border: isToday ? '2px solid #6c5ce7' : 'none',
+                  background: isDone ? '#00E5CC' : isToday ? 'transparent' : '#1f1f2e',
+                  border: isToday ? '2px solid #00E5CC' : 'none',
                   color: isDone ? '#0a0a0f' : isToday ? '#FFFFFF' : '#6b6b80',
                   fontWeight: isDone || isToday ? 700 : 600,
                 }}
@@ -179,13 +179,13 @@ export default async function MyProgramsPage() {
         {/* Up Next */}
         {upNext && (
           <Link href={`/workout/${upNext.id}`}>
-            <div className="bg-[#15151f] rounded-2xl p-4 border border-[#6c5ce7] relative mb-2">
+            <div className="bg-[#15151f] rounded-2xl p-4 border border-[#00E5CC] relative mb-2">
               <div className="absolute top-3 right-3 bg-[#1A2A0A] border border-[#2A4A0A] rounded-lg px-2 py-[3px]">
-                <span className="text-[#6c5ce7] text-[8px] font-bold tracking-[0.5px]">UP NEXT</span>
+                <span className="text-[#00E5CC] text-[8px] font-bold tracking-[0.5px]">UP NEXT</span>
               </div>
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-[26px] h-[26px] rounded-full bg-gradient-to-br from-[#2A2A1A] to-[#1A1A0A] flex items-center justify-center">
-                  <span className="text-[#6c5ce7] text-[9px] font-extrabold">{upNext.creatorInitials}</span>
+                  <span className="text-[#00E5CC] text-[9px] font-extrabold">{upNext.creatorInitials}</span>
                 </div>
                 <span className="text-[#6b6b80] text-[10px]">{upNext.programTitle} · Week {upNext.weekNumber}</span>
               </div>
@@ -193,7 +193,7 @@ export default async function MyProgramsPage() {
               <div className="text-[#6b6b80] text-[11px] mb-3">
                 {upNext.exercises?.length || '—'} exercises · ~{upNext.estimated_duration || 45} min
               </div>
-              <div className="w-full py-[11px] bg-[#6c5ce7] text-white rounded-[10px] text-center text-[12px] font-bold tracking-[0.5px]">
+              <div className="w-full py-[11px] bg-[#00E5CC] text-white rounded-[10px] text-center text-[12px] font-bold tracking-[0.5px]">
                 START WORKOUT
               </div>
             </div>
@@ -238,7 +238,7 @@ export default async function MyProgramsPage() {
               <div key={workout.id} className="bg-[#15151f] rounded-[14px] p-3 border border-[#2a2a3a] mb-2">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-[26px] h-[26px] rounded-full bg-[#6c5ce7] flex items-center justify-center">
+                    <div className="w-[26px] h-[26px] rounded-full bg-[#00E5CC] flex items-center justify-center">
                       <Check className="h-[13px] w-[13px] text-white" strokeWidth={3} />
                     </div>
                     <div>
@@ -247,7 +247,7 @@ export default async function MyProgramsPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-[#6c5ce7] text-[12px] font-bold">+10</div>
+                    <div className="text-[#00E5CC] text-[12px] font-bold">+10</div>
                     <div className="text-[#6b6b80] text-[8px]">MOMENTUM</div>
                   </div>
                 </div>
@@ -276,8 +276,8 @@ export default async function MyProgramsPage() {
               return (
                 <div key={cp.id} className="bg-[#15151f] rounded-[14px] p-4 border border-[#2a2a3a] mb-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-[36px] h-[36px] rounded-full bg-[#6c5ce7]/15 border border-[#6c5ce7]/25 flex items-center justify-center flex-shrink-0">
-                      <Trophy className="h-4 w-4 text-[#6c5ce7]" />
+                    <div className="w-[36px] h-[36px] rounded-full bg-[#00E5CC]/15 border border-[#00E5CC]/25 flex items-center justify-center flex-shrink-0">
+                      <Trophy className="h-4 w-4 text-[#00E5CC]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-[#f0f0f5] text-[13px] font-semibold">{progTitle}</div>
@@ -287,7 +287,7 @@ export default async function MyProgramsPage() {
                     </div>
                     {totalMomentum > 0 && (
                       <div className="text-right flex-shrink-0">
-                        <div className="flex items-center gap-1 text-[#6c5ce7]">
+                        <div className="flex items-center gap-1 text-[#00E5CC]">
                           <Zap className="h-3 w-3" />
                           <span className="text-[12px] font-bold">{totalMomentum.toLocaleString()}</span>
                         </div>
@@ -306,7 +306,7 @@ export default async function MyProgramsPage() {
           <div className="text-center py-16">
             <Zap className="h-8 w-8 text-[#6b6b80] mx-auto mb-3" />
             <p className="text-[#a0a0b8] mb-2">No active programs</p>
-            <Link href="/programs" className="text-sm text-[#6c5ce7] hover:text-[#7c6ff0] transition-colors">
+            <Link href="/programs" className="text-sm text-[#00E5CC] hover:text-[#00CCBB] transition-colors">
               Browse Programs
             </Link>
           </div>

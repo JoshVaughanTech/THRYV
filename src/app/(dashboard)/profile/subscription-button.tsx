@@ -46,7 +46,7 @@ export function SubscriptionButton({ status, hasStripeCustomer }: SubscriptionBu
       <button
         onClick={handleClick}
         disabled={loading}
-        className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#6c5ce7] text-xs font-bold text-white hover:bg-[#7c6ff0] transition-colors cursor-pointer disabled:opacity-50"
+        className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#00E5CC] text-xs font-bold text-white hover:bg-[#00CCBB] transition-colors cursor-pointer disabled:opacity-50"
       >
         <CreditCard className="h-3.5 w-3.5" />
         {loading ? 'Loading...' : 'Upgrade to Pro — $19.99/mo'}
@@ -58,7 +58,7 @@ export function SubscriptionButton({ status, hasStripeCustomer }: SubscriptionBu
     <button
       onClick={handleClick}
       disabled={loading}
-      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#6c5ce7] text-xs font-bold text-white hover:bg-[#7c6ff0] transition-colors cursor-pointer disabled:opacity-50"
+      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#00E5CC] text-xs font-bold text-white hover:bg-[#00CCBB] transition-colors cursor-pointer disabled:opacity-50"
     >
       <CreditCard className="h-3.5 w-3.5" />
       {loading ? 'Loading...' : 'Subscribe — $19.99/mo'}

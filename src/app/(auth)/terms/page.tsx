@@ -7,7 +7,7 @@ export default function TermsOfServicePage() {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-[#6c5ce7] hover:text-[#7c6ff7] transition-colors mb-10"
+          className="inline-flex items-center gap-2 text-sm text-[#00E5CC] hover:text-[#7c6ff7] transition-colors mb-10"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -275,7 +275,7 @@ export default function TermsOfServicePage() {
               If you have any questions about these Terms, please contact us at{' '}
               <a
                 href="mailto:legal@thryv.fit"
-                className="text-[#6c5ce7] hover:underline"
+                className="text-[#00E5CC] hover:underline"
               >
                 legal@thryv.fit
               </a>

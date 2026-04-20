@@ -167,7 +167,7 @@ export default async function CreatorEarningsPage() {
       </div>
 
       {/* Current Month Card */}
-      <Card className="border-[#6c5ce7]/30 bg-[#6c5ce7]/5 mb-8">
+      <Card className="border-[#00E5CC]/30 bg-[#00E5CC]/5 mb-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <p className="text-[10px] text-[#a0a0b8] uppercase tracking-[1px] font-medium">
@@ -179,7 +179,7 @@ export default async function CreatorEarningsPage() {
           </Badge>
         </div>
 
-        <p className="text-5xl font-bold text-[#6c5ce7] mb-8">
+        <p className="text-5xl font-bold text-[#00E5CC] mb-8">
           ${currentMonthEarnings.toLocaleString(undefined, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
@@ -192,7 +192,7 @@ export default async function CreatorEarningsPage() {
             label="Workout completions"
             value={completionCount.toLocaleString()}
             weight="50% weight"
-            dotColor="bg-[#6c5ce7]"
+            dotColor="bg-[#00E5CC]"
           />
           <BreakdownCard
             label="Time spent"
@@ -217,7 +217,7 @@ export default async function CreatorEarningsPage() {
             <Card key={program.id}>
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-[#1f1f2e] flex items-center justify-center">
-                  <Zap className="h-4 w-4 text-[#6c5ce7]" />
+                  <Zap className="h-4 w-4 text-[#00E5CC]" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-white">{program.title}</p>
@@ -225,7 +225,7 @@ export default async function CreatorEarningsPage() {
                 </div>
               </div>
 
-              <p className="text-2xl font-bold text-[#6c5ce7] mb-3">
+              <p className="text-2xl font-bold text-[#00E5CC] mb-3">
                 ${program.revenue.toLocaleString()}
               </p>
 
@@ -243,7 +243,7 @@ export default async function CreatorEarningsPage() {
               {/* Progress bar showing share of total */}
               <div className="h-1.5 rounded-full bg-[#2a2a3a]">
                 <div
-                  className="h-full rounded-full bg-[#6c5ce7] transition-all"
+                  className="h-full rounded-full bg-[#00E5CC] transition-all"
                   style={{
                     width: `${totalProgramRevenue > 0 ? Math.round((program.revenue / totalProgramRevenue) * 100) : 0}%`,
                   }}
@@ -296,7 +296,7 @@ export default async function CreatorEarningsPage() {
                   <td className="py-4 text-center text-sm text-[#a0a0b8]">
                     {row.engagement.toLocaleString()}
                   </td>
-                  <td className="py-4 text-right text-sm font-medium text-[#6c5ce7]">
+                  <td className="py-4 text-right text-sm font-medium text-[#00E5CC]">
                     ${row.total.toLocaleString(undefined, {
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
@@ -304,7 +304,7 @@ export default async function CreatorEarningsPage() {
                   </td>
                   <td className="py-4 text-right">
                     {row.status === 'locked' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1A2A0A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#6c5ce7]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#1A2A0A] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.5px] text-[#00E5CC]">
                         <Lock className="h-3 w-3" />
                         Locked
                       </span>

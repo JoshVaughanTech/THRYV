@@ -45,8 +45,8 @@ export default async function CreatorSettingsPage() {
       {/* Creator Profile Card */}
       <div className="max-w-[640px] rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6 mb-6">
         <div className="flex items-center gap-4 mb-8">
-          <div className="h-16 w-16 rounded-full border-2 border-[#6c5ce7] bg-[#1A2A0A] flex items-center justify-center">
-            <span className="text-lg font-bold text-[#6c5ce7]">{initials}</span>
+          <div className="h-16 w-16 rounded-full border-2 border-[#00E5CC] bg-[#1A2A0A] flex items-center justify-center">
+            <span className="text-lg font-bold text-[#00E5CC]">{initials}</span>
           </div>
           <div>
             <p className="text-lg font-bold text-white">{fullName}</p>

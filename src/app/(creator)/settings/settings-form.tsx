@@ -57,7 +57,7 @@ export function SettingsForm({
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
+          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50"
         />
       </div>
 
@@ -69,7 +69,7 @@ export function SettingsForm({
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           rows={3}
-          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50 resize-none"
+          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50 resize-none"
         />
       </div>
 
@@ -80,7 +80,7 @@ export function SettingsForm({
         <input
           value={credentials}
           onChange={(e) => setCredentials(e.target.value)}
-          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
+          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50"
         />
       </div>
 
@@ -92,14 +92,14 @@ export function SettingsForm({
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}
           placeholder="https://youtube.com/..."
-          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white placeholder:text-[#4a4a5a] focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
+          className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white placeholder:text-[#4a4a5a] focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50"
         />
       </div>
 
       <button
         onClick={handleSave}
         disabled={saving}
-        className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors disabled:opacity-50 cursor-pointer"
+        className="flex items-center gap-2 rounded-xl bg-[#00E5CC] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#00CCBB] transition-colors disabled:opacity-50 cursor-pointer"
       >
         {saved ? (
           <><Check className="h-4 w-4" /> Saved</>

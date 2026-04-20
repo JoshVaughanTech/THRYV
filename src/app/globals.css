@@ -1,34 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  /* Core palette — dark, premium (matching thryv-mobile theme) */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-tertiary: #1a1a25;
-  --bg-card: #15151f;
-  --bg-card-hover: #1c1c28;
+  /* Core palette — matching thryv-mobile design system (D object) */
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #0F0F0F;
+  --bg-tertiary: #191919;
+  --bg-card: #141414;
+  --bg-card-hover: #1c1c1c;
 
-  --border-primary: #2a2a3a;
-  --border-secondary: #1f1f2e;
+  --border-primary: rgba(255,255,255,0.06);
+  --border-secondary: rgba(255,255,255,0.1);
 
-  --text-primary: #f0f0f5;
-  --text-secondary: #a0a0b8;
-  --text-muted: #6b6b80;
-  --text-hint: #4a4a5a;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
+  --text-muted: #666666;
+  --text-hint: #444444;
 
-  --accent-primary: #6c5ce7;
-  --accent-primary-hover: #7c6ff0;
-  --accent-secondary: #00d2ff;
-  --accent-glow: rgba(108, 92, 231, 0.15);
+  --accent-primary: #00E5CC;
+  --accent-primary-hover: #00CCBB;
+  --accent-secondary: #7799DD;
+  --accent-glow: rgba(0, 229, 204, 0.15);
+  --accent-dim: rgba(0, 229, 204, 0.08);
 
-  --success: #00e676;
-  --warning: #ffab00;
-  --error: #ff5252;
-  --info: #00d2ff;
-  --purple: #6c5ce7;
+  --success: #4CD9A0;
+  --warning: #F0A000;
+  --error: #E24B4A;
+  --info: #7799DD;
+  --purple: #B477D9;
 
-  --momentum-gradient-start: #6c5ce7;
-  --momentum-gradient-end: #00d2ff;
+  --momentum-gradient-start: #00E5CC;
+  --momentum-gradient-end: #7799DD;
 }
 
 @theme inline {
@@ -63,7 +64,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-primary) transparent;
+  scrollbar-color: rgba(255,255,255,0.06) transparent;
 }
 
 body {
@@ -99,7 +100,7 @@ body {
 }
 
 .glow {
-  box-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(108, 92, 231, 0.08);
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 60px rgba(0, 229, 204, 0.08);
 }
 
 .momentum-gradient {
@@ -123,8 +124,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 240, 0, 0); }
-  50% { box-shadow: 0 0 20px 4px rgba(180, 240, 0, 0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 229, 204, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(0, 229, 204, 0.15); }
 }
 
 .animate-fade-in {

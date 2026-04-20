@@ -49,7 +49,7 @@ export function NewPostForm({ programs }: NewPostFormProps) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 rounded-xl bg-[#6c5ce7] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors cursor-pointer"
+        className="flex items-center gap-2 rounded-xl bg-[#00E5CC] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#00CCBB] transition-colors cursor-pointer"
       >
         <Plus className="h-4 w-4" />
         New post
@@ -73,7 +73,7 @@ export function NewPostForm({ programs }: NewPostFormProps) {
             <select
               value={programId}
               onChange={(e) => setProgramId(e.target.value)}
-              className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50"
+              className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50"
             >
               {programs.map((p) => (
                 <option key={p.id} value={p.id}>{p.title}</option>
@@ -89,7 +89,7 @@ export function NewPostForm({ programs }: NewPostFormProps) {
               rows={4}
               required
               placeholder="Share an update with your community..."
-              className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white placeholder:text-[#4a4a5a] focus:outline-none focus:ring-1 focus:ring-[#6c5ce7]/50 resize-none"
+              className="w-full rounded-xl bg-[#0a0a0f] border border-[#2a2a3a] px-4 py-3 text-sm text-white placeholder:text-[#4a4a5a] focus:outline-none focus:ring-1 focus:ring-[#00E5CC]/50 resize-none"
             />
           </div>
 
@@ -100,7 +100,7 @@ export function NewPostForm({ programs }: NewPostFormProps) {
           <button
             type="submit"
             disabled={loading || !content.trim()}
-            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#6c5ce7] py-2.5 text-sm font-bold text-white hover:bg-[#7c6ff0] transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#00E5CC] py-2.5 text-sm font-bold text-white hover:bg-[#00CCBB] transition-colors disabled:opacity-50 cursor-pointer"
           >
             <Send className="h-4 w-4" />
             {loading ? 'Posting...' : 'Post'}

@@ -26,7 +26,7 @@ export function NotificationToggles() {
           <button
             onClick={() => toggle(n.key)}
             className={`relative w-11 h-6 rounded-full transition-colors cursor-pointer ${
-              toggles[n.key] ? 'bg-[#6c5ce7]' : 'bg-[#2a2a3a]'
+              toggles[n.key] ? 'bg-[#00E5CC]' : 'bg-[#2a2a3a]'
             }`}
           >
             <div

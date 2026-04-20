@@ -148,7 +148,7 @@ export default function CreatorSignupPage() {
       longest_streak: 0,
     }, { onConflict: 'user_id' });
 
-    router.push('/dashboard');
+    router.push('/builder');
     router.refresh();
   }
 

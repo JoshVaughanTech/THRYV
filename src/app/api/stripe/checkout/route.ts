@@ -24,18 +24,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('full_name, email')
     .eq('id', user.id)
     .single();
 
-  // Check if user already has a Stripe customer ID
-  const { data: subscription } = await supabase
+  if (profileError) {
+    return NextResponse.json({ error: 'Failed to load profile' }, { status: 500 });
+  }
+
+  // Check if subscription record exists — create if missing
+  let { data: subscription, error: subError } = await supabase
     .from('subscriptions')
     .select('stripe_customer_id')
     .eq('user_id', user.id)
     .single();
+
+  if (subError && subError.code === 'PGRST116') {
+    // No subscription record exists — create one
+    const { error: insertError } = await supabase
+      .from('subscriptions')
+      .insert({ user_id: user.id, status: 'trial' });
+    if (insertError) {
+      return NextResponse.json({ error: 'Failed to create subscription record' }, { status: 500 });
+    }
+    subscription = null;
+  } else if (subError) {
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+  }
 
   let customerId = subscription?.stripe_customer_id;
 
@@ -49,10 +66,14 @@ export async function POST(request: Request) {
     customerId = customer.id;
 
     // Store customer ID
-    await supabase
+    const { error: updateError } = await supabase
       .from('subscriptions')
       .update({ stripe_customer_id: customerId })
       .eq('user_id', user.id);
+
+    if (updateError) {
+      return NextResponse.json({ error: 'Failed to save customer info' }, { status: 500 });
+    }
   }
 
   // Create checkout session

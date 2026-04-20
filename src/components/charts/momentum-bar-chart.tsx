@@ -33,7 +33,7 @@ export function MomentumBarChart({ data }: MomentumBarChartProps) {
             }}
             cursor={{ fill: 'rgba(180, 240, 0, 0.05)' }}
           />
-          <Bar dataKey="points" fill="#6c5ce7" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="points" fill="#00E5CC" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

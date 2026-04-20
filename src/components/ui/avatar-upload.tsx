@@ -79,9 +79,9 @@ export function AvatarUpload({
         type="button"
         onClick={handleClick}
         disabled={uploading}
-        className="group relative h-[72px] w-[72px] rounded-full border-2 border-[#6c5ce7] overflow-hidden
+        className="group relative h-[72px] w-[72px] rounded-full border-2 border-[#00E5CC] overflow-hidden
                    bg-[#15151f] transition-all duration-200 cursor-pointer
-                   hover:border-[#6c5ce7]/80 focus:outline-none focus:ring-2 focus:ring-[#6c5ce7]/50 focus:ring-offset-2 focus:ring-offset-[#0a0a0f]
+                   hover:border-[#00E5CC]/80 focus:outline-none focus:ring-2 focus:ring-[#00E5CC]/50 focus:ring-offset-2 focus:ring-offset-[#0a0a0f]
                    disabled:cursor-not-allowed disabled:opacity-70"
       >
         {/* Avatar image or initials */}
@@ -92,7 +92,7 @@ export function AvatarUpload({
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-lg font-bold text-[#6c5ce7]">
+          <span className="flex h-full w-full items-center justify-center text-lg font-bold text-[#00E5CC]">
             {getInitials(fullName)}
           </span>
         )}
@@ -122,7 +122,7 @@ export function AvatarUpload({
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0f]/70">
             <svg
-              className="h-6 w-6 animate-spin text-[#6c5ce7]"
+              className="h-6 w-6 animate-spin text-[#00E5CC]"
               viewBox="0 0 24 24"
               fill="none"
             >

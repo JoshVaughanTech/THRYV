@@ -23,7 +23,7 @@ export default async function ProgramDetailPage(props: {
 
   const { data: program } = await supabase
     .from('programs')
-    .select('*, creators(*, profiles:user_id(full_name, avatar_url, bio:credentials))')
+    .select('*, creators(*, profiles:user_id(full_name, avatar_url))')
     .eq('id', id)
     .single();
 
@@ -113,7 +113,7 @@ export default async function ProgramDetailPage(props: {
             {creator?.profiles?.full_name || 'Coach'}
           </p>
           <p className="text-sm text-text-muted line-clamp-1">
-            {creator?.profiles?.bio || creator?.bio || 'Certified coach'}
+            {creator?.bio || creator?.credentials || 'Certified coach'}
           </p>
         </div>
       </Card>

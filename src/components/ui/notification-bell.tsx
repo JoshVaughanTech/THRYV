@@ -34,7 +34,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
   return (
     <Link
       href="/notifications"
-      className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#2a2a3a] transition-colors hover:border-[#6c5ce7]"
+      className="relative flex h-10 w-10 items-center justify-center rounded-full border border-[#2a2a3a] transition-colors hover:border-[#00E5CC]"
     >
       <Bell className="h-4 w-4 text-[#a0a0b8]" />
       {unreadCount > 0 && (

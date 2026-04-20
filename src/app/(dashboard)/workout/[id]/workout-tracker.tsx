@@ -64,11 +64,11 @@ function RestTimer({ seconds, onClose }: { seconds: number; onClose: () => void 
   return (
     <div className="fixed bottom-20 left-5 right-5 lg:bottom-8 lg:left-auto lg:right-8 lg:w-[400px] z-[60] rounded-2xl border border-[#2a2a3a] bg-[#12121a] p-5 shadow-2xl">
       <p className="text-[10px] text-[#6b6b80] uppercase tracking-[1px] font-medium text-center mb-2">Rest Timer</p>
-      <p className="text-4xl font-bold text-[#6c5ce7] text-center mb-3">
+      <p className="text-4xl font-bold text-[#00E5CC] text-center mb-3">
         {m}:{s.toString().padStart(2, '0')}
       </p>
       <div className="h-1 rounded-full bg-[#2a2a3a] mb-4 overflow-hidden">
-        <div className="h-full rounded-full bg-[#6c5ce7] transition-all duration-1000" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-[#00E5CC] transition-all duration-1000" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex gap-2">
         <button onClick={() => setRemaining((r) => Math.max(0, r - 15))} className="flex-1 py-2 rounded-lg bg-[#0a0a0f] border border-[#2a2a3a] text-[11px] font-bold text-[#a0a0b8] cursor-pointer">-15s</button>
@@ -110,13 +110,13 @@ function SessionSummary({
     <div className="max-w-lg mx-auto px-5 py-8">
       {/* Success */}
       <div className="text-center mb-8">
-        <div className="w-[72px] h-[72px] rounded-full bg-[#6c5ce7]/10 flex items-center justify-center mx-auto mb-4">
-          <Star className="h-8 w-8 text-[#6c5ce7]" />
+        <div className="w-[72px] h-[72px] rounded-full bg-[#00E5CC]/10 flex items-center justify-center mx-auto mb-4">
+          <Star className="h-8 w-8 text-[#00E5CC]" />
         </div>
-        <h2 className="text-lg font-bold text-[#6c5ce7] mb-1">Workout complete</h2>
+        <h2 className="text-lg font-bold text-[#00E5CC] mb-1">Workout complete</h2>
         <p className="text-xs text-[#a0a0b8]">{programTitle} · {creatorName}</p>
         <div className="flex items-center justify-center gap-2 mt-3">
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#6c5ce7]/10 border border-[#6c5ce7]/20 px-3 py-1 text-xs font-semibold text-[#6c5ce7]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#00E5CC]/10 border border-[#00E5CC]/20 px-3 py-1 text-xs font-semibold text-[#00E5CC]">
             <Zap className="h-3 w-3" /> +{momentumReward}
           </span>
           {streak > 0 && (
@@ -169,7 +169,7 @@ function SessionSummary({
         <button className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl border border-[#2a2a3a] bg-[#12121a] text-xs font-semibold text-[#a0a0b8] cursor-pointer">
           <Share2 className="h-3.5 w-3.5" /> Share
         </button>
-        <button onClick={onFinish} className="flex-[2] py-3.5 rounded-xl bg-[#6c5ce7] text-sm font-bold text-white cursor-pointer">
+        <button onClick={onFinish} className="flex-[2] py-3.5 rounded-xl bg-[#00E5CC] text-sm font-bold text-white cursor-pointer">
           Finish Session
         </button>
       </div>
@@ -247,10 +247,18 @@ export function WorkoutTracker({
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    await supabase.from('workout_sessions').insert({
+    // Insert workout session and return its ID directly (no race condition)
+    const { data: newSession, error: sessionError } = await supabase.from('workout_sessions').insert({
       user_id: user.id, workout_id: workoutId, program_id: programId,
       duration_seconds: elapsed > 0 ? elapsed : null,
-    });
+    }).select('id').single();
+
+    if (sessionError || !newSession) {
+      setSaving(false);
+      return;
+    }
+
+    const sessionId = newSession.id;
 
     await supabase.from('momentum_events').insert({
       user_id: user.id, event_type: 'workout_completion', points: momentumReward, reference_id: workoutId,
@@ -261,10 +269,10 @@ export function WorkoutTracker({
       ...(elapsed > 0 ? [{ user_id: user.id, program_id: programId, creator_id: creatorId, event_type: 'time_spent' as const, value: elapsed }] : []),
     ]);
 
-    // Update streak
+    // Update streak (initialize if missing)
     const today = new Date().toISOString().split('T')[0];
     const { data: streakData } = await supabase.from('streaks').select('*').eq('user_id', user.id).single();
-    let newStreak = 0;
+    let newStreak = 1;
     if (streakData) {
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
       newStreak = streakData.current_streak;
@@ -273,20 +281,13 @@ export function WorkoutTracker({
       await supabase.from('streaks').update({
         current_streak: newStreak, longest_streak: Math.max(newStreak, streakData.longest_streak), last_workout_date: today,
       }).eq('user_id', user.id);
-      setStreak(newStreak);
+    } else {
+      // First workout ever — create streak record
+      await supabase.from('streaks').insert({
+        user_id: user.id, current_streak: 1, longest_streak: 1, last_workout_date: today,
+      });
     }
-
-    // Get the session we just inserted so we have the session_id
-    const { data: newSession } = await supabase
-      .from('workout_sessions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('workout_id', workoutId)
-      .order('completed_at', { ascending: false })
-      .limit(1)
-      .single();
-
-    const sessionId = newSession?.id;
+    setStreak(newStreak);
 
     // ── Save set logs ──
     if (sessionId) {
@@ -316,7 +317,8 @@ export function WorkoutTracker({
       });
 
       if (setLogRows.length > 0) {
-        await supabase.from('set_logs').insert(setLogRows);
+        const { error: logsError } = await supabase.from('set_logs').insert(setLogRows);
+        if (logsError) console.error('Set logs insert failed:', logsError);
       }
 
       // ── Check for new PRs ──
@@ -441,12 +443,13 @@ export function WorkoutTracker({
           if (currentWeek?.workouts) {
             const weekWorkoutIds = currentWeek.workouts.map((w: any) => w.id);
 
-            // Count completed sessions for workouts in this week
+            // Count completed sessions for workouts in this week, scoped to this activation
             const { count: completedCount } = await supabase
               .from('workout_sessions')
               .select('id', { count: 'exact', head: true })
               .eq('user_id', user.id)
-              .in('workout_id', weekWorkoutIds);
+              .in('workout_id', weekWorkoutIds)
+              .gte('completed_at', (activation as any).activated_at || '1970-01-01');
 
             const allWeekWorkoutsDone = (completedCount || 0) >= weekWorkoutIds.length;
 
@@ -461,18 +464,20 @@ export function WorkoutTracker({
 
               if (nextWeek) {
                 // Advance to next week
-                await supabase
+                const { error: advanceError } = await supabase
                   .from('program_activations')
                   .update({ current_week: weekNumber + 1 })
                   .eq('id', activation.id);
 
-                await supabase.from('notifications').insert({
-                  user_id: user.id,
-                  type: 'level_up',
-                  title: `Week ${weekNumber} complete!`,
-                  body: `Moving to Week ${weekNumber + 1}. Keep pushing!`,
-                  data: { program_id: programId, from_week: weekNumber, to_week: weekNumber + 1 },
-                });
+                if (!advanceError) {
+                  await supabase.from('notifications').insert({
+                    user_id: user.id,
+                    type: 'level_up',
+                    title: `Week ${weekNumber} complete!`,
+                    body: `Moving to Week ${weekNumber + 1}. Keep pushing!`,
+                    data: { program_id: programId, from_week: weekNumber, to_week: weekNumber + 1 },
+                  });
+                }
               } else {
                 // No more weeks — program complete
                 const progTitle = (activation as any).programs?.title || programTitle;
@@ -510,12 +515,12 @@ export function WorkoutTracker({
   if (isCompleted) {
     return (
       <div className="text-center py-16">
-        <div className="w-16 h-16 rounded-full bg-[#6c5ce7] flex items-center justify-center mx-auto mb-4">
+        <div className="w-16 h-16 rounded-full bg-[#00E5CC] flex items-center justify-center mx-auto mb-4">
           <Check className="h-7 w-7 text-white" strokeWidth={3} />
         </div>
-        <p className="text-lg font-bold text-[#6c5ce7] mb-1">Workout Complete!</p>
+        <p className="text-lg font-bold text-[#00E5CC] mb-1">Workout Complete!</p>
         <p className="text-sm text-[#6b6b80]">+{momentumReward} Momentum earned</p>
-        <Link href="/my-programs" className="inline-block mt-6 text-sm text-[#6c5ce7] hover:text-[#7c6ff0]">
+        <Link href="/my-programs" className="inline-block mt-6 text-sm text-[#00E5CC] hover:text-[#00CCBB]">
           ← Back to My Programs
         </Link>
       </div>
@@ -561,7 +566,7 @@ export function WorkoutTracker({
       {/* Stats Bar */}
       <div className="flex gap-2 mt-4 mb-5">
         {[
-          { label: 'Exercises', value: `${completedExercises} / ${exercises.length}`, color: '#6c5ce7' },
+          { label: 'Exercises', value: `${completedExercises} / ${exercises.length}`, color: '#00E5CC' },
           { label: 'Volume (lb)', value: exerciseStates.reduce((s, e) => s + e.sets.filter((st) => st.done).reduce((v, st) => v + (parseFloat(st.weight) || 0) * (parseInt(st.reps) || 0), 0), 0).toLocaleString(), color: '#f0f0f5' },
           { label: 'Avg RPE', value: (() => { const v = exerciseStates.flatMap((e) => e.sets.filter((s) => s.done && s.rpe).map((s) => parseFloat(s.rpe))); return v.length ? (v.reduce((a, b) => a + b, 0) / v.length).toFixed(1) : '—'; })(), color: '#ffab00' },
         ].map((s) => (
@@ -578,12 +583,12 @@ export function WorkoutTracker({
           const state = exerciseStates[exIdx];
           return (
             <div key={ex.id} className={`rounded-2xl border bg-[#12121a] transition-all ${
-              state.completed ? 'border-[#2a2a3a] opacity-50' : state.expanded ? 'border-[#6c5ce7]/30' : 'border-[#2a2a3a]'
+              state.completed ? 'border-[#2a2a3a] opacity-50' : state.expanded ? 'border-[#00E5CC]/30' : 'border-[#2a2a3a]'
             }`}>
               {/* Collapsed header */}
               <button onClick={() => toggleExpand(exIdx)} className="w-full flex items-center gap-3 p-4 cursor-pointer text-left">
                 <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[12px] font-extrabold flex-shrink-0 ${
-                  state.completed ? 'bg-[#6c5ce7]' : 'bg-[#1a1a2e]'
+                  state.completed ? 'bg-[#00E5CC]' : 'bg-[#1a1a2e]'
                 }`}>
                   {state.completed ? <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} /> : <span className="text-[#7799dd]">{exIdx + 1}</span>}
                 </div>
@@ -608,7 +613,7 @@ export function WorkoutTracker({
                     {ex.rest_seconds && <span>| Rest: {ex.rest_seconds}s</span>}
                     {ex.rpe && <span>| Target RPE: {ex.rpe}</span>}
                     {ex.video_url && (
-                      <a href={ex.video_url} target="_blank" rel="noopener noreferrer" className="ml-auto flex items-center gap-1 text-[#6b6b80] hover:text-[#6c5ce7]">
+                      <a href={ex.video_url} target="_blank" rel="noopener noreferrer" className="ml-auto flex items-center gap-1 text-[#6b6b80] hover:text-[#00E5CC]">
                         <Play className="h-3 w-3" /> <span className="text-[9px] font-semibold">VIDEO</span>
                       </a>
                     )}
@@ -627,9 +632,9 @@ export function WorkoutTracker({
                   {/* Set rows */}
                   {state.sets.map((set, setIdx) => (
                     <div key={setIdx} className={`flex items-center gap-1 py-1.5 px-1 rounded-lg ${
-                      setIdx === state.activeSet && !set.done ? 'bg-[#6c5ce7]/[0.03]' : ''
+                      setIdx === state.activeSet && !set.done ? 'bg-[#00E5CC]/[0.03]' : ''
                     }`}>
-                      <span className="w-8 text-[12px] font-bold text-[#6c5ce7]">{setIdx + 1}</span>
+                      <span className="w-8 text-[12px] font-bold text-[#00E5CC]">{setIdx + 1}</span>
                       <span className="w-12 text-[10px] text-[#4a4a5a]">—</span>
                       <input
                         type="number"
@@ -637,7 +642,7 @@ export function WorkoutTracker({
                         onChange={(e) => updateSet(exIdx, setIdx, 'weight', e.target.value)}
                         placeholder="0"
                         className={`flex-1 bg-[#0a0a0f] rounded-lg border px-2 py-1.5 text-sm font-bold text-center focus:outline-none ${
-                          set.done ? 'border-[#2a2a3a] text-[#6b6b80]' : 'border-[#2a2a3a] text-white focus:border-[#6c5ce7]'
+                          set.done ? 'border-[#2a2a3a] text-[#6b6b80]' : 'border-[#2a2a3a] text-white focus:border-[#00E5CC]'
                         }`}
                       />
                       <input
@@ -645,18 +650,18 @@ export function WorkoutTracker({
                         value={set.reps}
                         onChange={(e) => updateSet(exIdx, setIdx, 'reps', e.target.value)}
                         placeholder={ex.reps || '0'}
-                        className="w-12 bg-[#0a0a0f] rounded-lg border border-[#2a2a3a] px-1 py-1.5 text-sm font-bold text-center text-[#ffab00] focus:outline-none focus:border-[#6c5ce7]"
+                        className="w-12 bg-[#0a0a0f] rounded-lg border border-[#2a2a3a] px-1 py-1.5 text-sm font-bold text-center text-[#ffab00] focus:outline-none focus:border-[#00E5CC]"
                       />
                       <input
                         value={set.rpe}
                         onChange={(e) => updateSet(exIdx, setIdx, 'rpe', e.target.value)}
                         placeholder="—"
-                        className="w-10 bg-[#0a0a0f] rounded-lg border border-[#2a2a3a] px-1 py-1.5 text-sm font-bold text-center text-[#b477d9] focus:outline-none focus:border-[#6c5ce7]"
+                        className="w-10 bg-[#0a0a0f] rounded-lg border border-[#2a2a3a] px-1 py-1.5 text-sm font-bold text-center text-[#b477d9] focus:outline-none focus:border-[#00E5CC]"
                       />
                       <button
                         onClick={() => updateSet(exIdx, setIdx, 'done', !set.done)}
                         className={`w-[22px] h-[22px] rounded-full border-[1.5px] flex items-center justify-center flex-shrink-0 cursor-pointer ${
-                          set.done ? 'bg-[#6c5ce7] border-[#6c5ce7]' : 'border-[#2a2a3a]'
+                          set.done ? 'bg-[#00E5CC] border-[#00E5CC]' : 'border-[#2a2a3a]'
                         }`}
                       >
                         {set.done && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
@@ -670,7 +675,7 @@ export function WorkoutTracker({
                       <Plus className="h-3 w-3" /> Add set
                     </button>
                     {ex.rest_seconds && (
-                      <button onClick={() => setRestTimer(ex.rest_seconds!)} className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-[#6c5ce7]/10 text-[10px] font-bold text-[#6c5ce7] cursor-pointer">
+                      <button onClick={() => setRestTimer(ex.rest_seconds!)} className="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg bg-[#00E5CC]/10 text-[10px] font-bold text-[#00E5CC] cursor-pointer">
                         <Timer className="h-3 w-3" /> Rest {ex.rest_seconds}s
                       </button>
                     )}
@@ -694,7 +699,7 @@ export function WorkoutTracker({
       <div className="fixed bottom-0 left-0 right-0 lg:relative lg:mt-6 z-30">
         <div className="bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/95 to-transparent px-5 pt-4 pb-9 lg:p-0 lg:bg-none flex gap-3">
           {!started ? (
-            <button onClick={() => setStarted(true)} className="flex-1 py-4 rounded-xl bg-[#6c5ce7] text-sm font-bold text-white cursor-pointer">
+            <button onClick={() => setStarted(true)} className="flex-1 py-4 rounded-xl bg-[#00E5CC] text-sm font-bold text-white cursor-pointer">
               START WORKOUT
             </button>
           ) : (
@@ -703,7 +708,7 @@ export function WorkoutTracker({
                 onClick={handleComplete}
                 disabled={saving || !allDone}
                 className={`flex-[2] py-4 rounded-xl text-sm font-bold cursor-pointer transition-all ${
-                  allDone ? 'bg-[#6c5ce7] text-white' : 'bg-[#1a1a25] border border-[#2a2a3a] text-[#6b6b80]'
+                  allDone ? 'bg-[#00E5CC] text-white' : 'bg-[#1a1a25] border border-[#2a2a3a] text-[#6b6b80]'
                 } disabled:opacity-50`}
               >
                 {saving ? 'SAVING...' : allDone ? 'COMPLETE WORKOUT' : `${completedExercises} OF ${exercises.length} EXERCISES DONE`}

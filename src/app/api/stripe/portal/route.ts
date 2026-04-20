@@ -24,11 +24,15 @@ export async function POST() {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }
 
-  const { data: subscription } = await supabase
+  const { data: subscription, error: subError } = await supabase
     .from('subscriptions')
     .select('stripe_customer_id')
     .eq('user_id', user.id)
     .single();
+
+  if (subError && subError.code !== 'PGRST116') {
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+  }
 
   if (!subscription?.stripe_customer_id) {
     return NextResponse.json({ error: 'No subscription found' }, { status: 404 });

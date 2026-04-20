@@ -7,7 +7,7 @@ export default function PrivacyPolicyPage() {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-[#6c5ce7] hover:text-[#7c6ff7] transition-colors mb-10"
+          className="inline-flex items-center gap-2 text-sm text-[#00E5CC] hover:text-[#7c6ff7] transition-colors mb-10"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
@@ -257,7 +257,7 @@ export default function PrivacyPolicyPage() {
               To exercise any of these rights, please contact us at{' '}
               <a
                 href="mailto:privacy@thryv.fit"
-                className="text-[#6c5ce7] hover:underline"
+                className="text-[#00E5CC] hover:underline"
               >
                 privacy@thryv.fit
               </a>
@@ -282,7 +282,7 @@ export default function PrivacyPolicyPage() {
               information, please contact us at{' '}
               <a
                 href="mailto:privacy@thryv.fit"
-                className="text-[#6c5ce7] hover:underline"
+                className="text-[#00E5CC] hover:underline"
               >
                 privacy@thryv.fit
               </a>
@@ -322,7 +322,7 @@ export default function PrivacyPolicyPage() {
                 <strong className="text-white">Email:</strong>{' '}
                 <a
                   href="mailto:privacy@thryv.fit"
-                  className="text-[#6c5ce7] hover:underline"
+                  className="text-[#00E5CC] hover:underline"
                 >
                   privacy@thryv.fit
                 </a>
@@ -331,7 +331,7 @@ export default function PrivacyPolicyPage() {
                 <strong className="text-white">Support:</strong>{' '}
                 <a
                   href="mailto:support@thryv.fit"
-                  className="text-[#6c5ce7] hover:underline"
+                  className="text-[#00E5CC] hover:underline"
                 >
                   support@thryv.fit
                 </a>

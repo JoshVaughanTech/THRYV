@@ -1,43 +1,10 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-
-// Static analytics data (placeholder until real usage data is available)
-const retentionData = [
-  { week: 1, pct: 92 },
-  { week: 2, pct: 88 },
-  { week: 3, pct: 84 },
-  { week: 4, pct: 79 },
-  { week: 5, pct: 75 },
-  { week: 6, pct: 71 },
-  { week: 7, pct: 67 },
-  { week: 8, pct: 64 },
-  { week: 9, pct: 61 },
-  { week: 10, pct: 58 },
-  { week: 11, pct: 55 },
-  { week: 12, pct: 52 },
-];
-
-const peakTimes = [
-  { label: '6\u20138 AM', pct: 72, highlight: false },
-  { label: '12\u20131 PM', pct: 45, highlight: false },
-  { label: '5\u20137 PM', pct: 95, highlight: true },
-  { label: '8\u201310 PM', pct: 60, highlight: false },
-];
-
-const topExercises = [
-  { rank: 1, name: 'Barbell Back Squat', completions: 2847 },
-  { rank: 2, name: 'Romanian Deadlift', completions: 2561 },
-  { rank: 3, name: 'Bench Press', completions: 2234 },
-  { rank: 4, name: 'Pull-Ups', completions: 1998 },
-  { rank: 5, name: 'Hip Thrust', completions: 1876 },
-];
+import { AnalyticsDashboard } from './analytics-dashboard';
 
 export default async function AnalyticsPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
   const { data: creator } = await supabase
@@ -48,208 +15,180 @@ export default async function AnalyticsPage() {
 
   if (!creator) redirect('/creator-signup');
 
-  // Build SVG retention curve
-  const svgW = 560;
-  const svgH = 220;
-  const padL = 40;
-  const padR = 16;
-  const padT = 16;
-  const padB = 32;
-  const chartW = svgW - padL - padR;
-  const chartH = svgH - padT - padB;
+  const now = new Date();
+  const ninetyDaysAgo = new Date(now);
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
-  const retentionPoints = retentionData.map((d, i) => {
-    const x = padL + (i / (retentionData.length - 1)) * chartW;
-    const y = padT + (1 - (d.pct - 40) / 60) * chartH; // scale 40-100%
-    return { x, y, ...d };
+  // Fetch creator's programs
+  const { data: programs } = await supabase
+    .from('programs')
+    .select('id, title, status, duration_weeks, credit_cost')
+    .eq('creator_id', creator.id);
+
+  const programIds = programs?.map((p: any) => p.id) || [];
+
+  // Fetch activations for retention calculation
+  const { data: activations } = await supabase
+    .from('program_activations')
+    .select('user_id, program_id, activated_at, completed_at, current_week, is_active')
+    .in('program_id', programIds.length > 0 ? programIds : ['none']);
+
+  // Fetch workout sessions for this creator's programs
+  const { data: sessions } = await supabase
+    .from('workout_sessions')
+    .select('id, completed_at, duration_seconds, workout_id, program_id, user_id')
+    .in('program_id', programIds.length > 0 ? programIds : ['none'])
+    .gte('completed_at', ninetyDaysAgo.toISOString())
+    .order('completed_at', { ascending: true });
+
+  // Fetch exercises from creator's workouts for top exercises
+  const { data: workouts } = await supabase
+    .from('workouts')
+    .select('id, title')
+    .in('program_id', programIds.length > 0 ? programIds : ['none']);
+
+  const workoutIds = workouts?.map((w: any) => w.id) || [];
+
+  // Fetch set_logs to determine most-completed exercises
+  const sessionIds = (sessions || []).map((s: any) => s.id);
+  let setLogs: any[] = [];
+  if (sessionIds.length > 0) {
+    const { data } = await supabase
+      .from('set_logs')
+      .select('session_id, exercise_id, completed')
+      .in('session_id', sessionIds);
+    setLogs = data || [];
+  }
+
+  // Fetch exercises for names
+  let exercises: any[] = [];
+  if (workoutIds.length > 0) {
+    const { data } = await supabase
+      .from('exercises')
+      .select('id, name, workout_id')
+      .in('workout_id', workoutIds);
+    exercises = data || [];
+  }
+
+  // Build top exercises by set completions
+  const exerciseCompletions: Record<string, { name: string; count: number }> = {};
+  const exerciseMap = new Map(exercises.map((e: any) => [e.id, e.name]));
+  for (const log of setLogs) {
+    if (!log.completed) continue;
+    const name = exerciseMap.get(log.exercise_id);
+    if (!name) continue;
+    if (!exerciseCompletions[name]) exerciseCompletions[name] = { name, count: 0 };
+    exerciseCompletions[name].count += 1;
+  }
+  const topExercises = Object.values(exerciseCompletions)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  // Build retention curve per week (what % of users who activated are still active by week N)
+  const maxWeeks = Math.max(12, ...(programs || []).map((p: any) => p.duration_weeks || 12));
+  const retentionData: { week: number; pct: number }[] = [];
+  const totalActivated = activations?.length || 0;
+
+  for (let w = 1; w <= Math.min(maxWeeks, 12); w++) {
+    if (totalActivated === 0) {
+      retentionData.push({ week: w, pct: 0 });
+    } else {
+      // Users who reached at least week W (current_week >= w OR completed)
+      const reachedWeek = (activations || []).filter((a: any) =>
+        a.current_week >= w || a.completed_at
+      ).length;
+      retentionData.push({ week: w, pct: Math.round((reachedWeek / totalActivated) * 100) });
+    }
+  }
+
+  // Peak training times from sessions
+  const hourCounts: Record<number, number> = {};
+  for (const s of sessions || []) {
+    const hour = new Date(s.completed_at).getHours();
+    hourCounts[hour] = (hourCounts[hour] || 0) + 1;
+  }
+
+  const timeSlots = [
+    { label: '5–8 AM', hours: [5, 6, 7] },
+    { label: '8–11 AM', hours: [8, 9, 10] },
+    { label: '11–1 PM', hours: [11, 12] },
+    { label: '1–4 PM', hours: [13, 14, 15] },
+    { label: '4–7 PM', hours: [16, 17, 18] },
+    { label: '7–10 PM', hours: [19, 20, 21] },
+  ];
+
+  const totalSessionCount = sessions?.length || 1;
+  const peakTimes = timeSlots.map((slot) => {
+    const count = slot.hours.reduce((sum, h) => sum + (hourCounts[h] || 0), 0);
+    return {
+      label: slot.label,
+      pct: Math.round((count / totalSessionCount) * 100),
+    };
+  });
+  const maxPeakPct = Math.max(1, ...peakTimes.map((p) => p.pct));
+
+  // Per-program stats
+  const perProgram = (programs || []).map((p: any) => {
+    const progActivations = (activations || []).filter((a: any) => a.program_id === p.id);
+    const progSessions = (sessions || []).filter((s: any) => s.program_id === p.id);
+    const completed = progActivations.filter((a: any) => a.completed_at).length;
+    const active = progActivations.filter((a: any) => a.is_active && !a.completed_at).length;
+    const completionRate = progActivations.length > 0
+      ? Math.round((completed / progActivations.length) * 100)
+      : 0;
+    const avgDuration = progSessions.length > 0
+      ? Math.round(progSessions.reduce((s: number, ss: any) => s + (ss.duration_seconds || 0), 0) / progSessions.length / 60)
+      : 0;
+    const uniqueUsers = new Set(progSessions.map((s: any) => s.user_id)).size;
+
+    return {
+      id: p.id,
+      title: p.title,
+      status: p.status,
+      durationWeeks: p.duration_weeks,
+      totalActivations: progActivations.length,
+      activeUsers: active,
+      completed,
+      completionRate,
+      totalSessions: progSessions.length,
+      uniqueUsers,
+      avgDuration,
+    };
   });
 
-  const polyline = retentionPoints.map((p) => `${p.x},${p.y}`).join(' ');
+  // Weekly session trend (last 12 weeks)
+  const weeklyTrend: { week: string; sessions: number; users: number }[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const weekStart = new Date(now);
+    weekStart.setDate(weekStart.getDate() - (i * 7 + weekStart.getDay()));
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    const label = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-  // Gradient fill area
-  const areaPath = [
-    `M ${retentionPoints[0].x},${retentionPoints[0].y}`,
-    ...retentionPoints.slice(1).map((p) => `L ${p.x},${p.y}`),
-    `L ${retentionPoints[retentionPoints.length - 1].x},${padT + chartH}`,
-    `L ${retentionPoints[0].x},${padT + chartH}`,
-    'Z',
-  ].join(' ');
+    const weekSessions = (sessions || []).filter((s: any) => {
+      const d = new Date(s.completed_at);
+      return d >= weekStart && d < weekEnd;
+    });
+
+    weeklyTrend.push({
+      week: label,
+      sessions: weekSessions.length,
+      users: new Set(weekSessions.map((s: any) => s.user_id)).size,
+    });
+  }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Analytics</h1>
-        <p className="text-[#a0a0b8] mt-1">
-          Deep dive into your program performance.
-        </p>
-      </div>
-
-      {/* Charts Row */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        {/* User Retention Curve */}
-        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
-          <h2 className="text-lg font-bold text-white mb-1">
-            User retention curve
-          </h2>
-          <p className="text-xs text-[#a0a0b8] mb-4">
-            52% of users complete the full 12-week program
-          </p>
-
-          <svg
-            viewBox={`0 0 ${svgW} ${svgH}`}
-            className="w-full"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <linearGradient
-                id="retentionGradient"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="0%" stopColor="#6c5ce7" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#6c5ce7" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Grid lines */}
-            {[100, 80, 60, 40].map((pct) => {
-              const y = padT + (1 - (pct - 40) / 60) * chartH;
-              return (
-                <g key={pct}>
-                  <line
-                    x1={padL}
-                    y1={y}
-                    x2={svgW - padR}
-                    y2={y}
-                    stroke="#2a2a3a"
-                    strokeWidth="1"
-                  />
-                  <text
-                    x={padL - 8}
-                    y={y + 4}
-                    textAnchor="end"
-                    fill="#6b6b80"
-                    fontSize="10"
-                  >
-                    {pct}%
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Area fill */}
-            <path d={areaPath} fill="url(#retentionGradient)" />
-
-            {/* Line */}
-            <polyline
-              points={polyline}
-              fill="none"
-              stroke="#6c5ce7"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-
-            {/* Data points */}
-            {retentionPoints.map((p) => (
-              <circle
-                key={p.week}
-                cx={p.x}
-                cy={p.y}
-                r="3"
-                fill="#0a0a0f"
-                stroke="#6c5ce7"
-                strokeWidth="2"
-              />
-            ))}
-
-            {/* Week labels */}
-            {retentionPoints.map((p) => (
-              <text
-                key={`label-${p.week}`}
-                x={p.x}
-                y={svgH - 4}
-                textAnchor="middle"
-                fill="#6b6b80"
-                fontSize="9"
-              >
-                W{p.week}
-              </text>
-            ))}
-          </svg>
-        </div>
-
-        {/* Peak Training Times */}
-        <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
-          <h2 className="text-lg font-bold text-white mb-1">
-            Peak training times
-          </h2>
-          <p className="text-xs text-[#a0a0b8] mb-6">
-            Evening sessions (5&ndash;7 PM) are most popular
-          </p>
-
-          <div className="space-y-5">
-            {peakTimes.map((slot) => (
-              <div key={slot.label}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-sm text-[#CCCCCC]">{slot.label}</span>
-                  <span
-                    className={`text-sm font-bold ${
-                      slot.highlight ? 'text-[#6c5ce7]' : 'text-white'
-                    }`}
-                  >
-                    {slot.pct}%
-                  </span>
-                </div>
-                <div className="h-3 rounded-full bg-[#2a2a3a] overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${
-                      slot.highlight ? 'bg-[#6c5ce7]' : 'bg-[#7799DD]'
-                    }`}
-                    style={{ width: `${slot.pct}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Most Completed Exercises */}
-      <div className="rounded-2xl border border-[#2a2a3a] bg-[#15151f] p-6">
-        <h2 className="text-lg font-bold text-white mb-6">
-          Most completed exercises
-        </h2>
-
-        <div className="grid grid-cols-5 gap-4">
-          {topExercises.map((ex) => (
-            <div
-              key={ex.rank}
-              className="rounded-xl border border-[#2a2a3a] bg-[#0a0a0f] p-4 flex flex-col items-center text-center"
-            >
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold mb-3 ${
-                  ex.rank === 1
-                    ? 'bg-[#6c5ce7] text-white'
-                    : 'bg-[#2a2a3a] text-[#a0a0b8]'
-                }`}
-              >
-                #{ex.rank}
-              </div>
-              <p className="text-sm font-semibold text-white mb-1">
-                {ex.name}
-              </p>
-              <p className="text-lg font-bold text-[#00d2ff]">
-                {ex.completions.toLocaleString()}
-              </p>
-              <p className="text-[11px] text-[#6b6b80]">completions</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <AnalyticsDashboard
+      retentionData={retentionData}
+      peakTimes={peakTimes}
+      maxPeakPct={maxPeakPct}
+      topExercises={topExercises}
+      perProgram={perProgram}
+      weeklyTrend={weeklyTrend}
+      totalActivated={totalActivated}
+      totalSessions={sessions?.length || 0}
+      hasData={(sessions?.length || 0) > 0}
+    />
   );
 }
